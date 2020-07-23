@@ -1,7 +1,7 @@
 package dev.jatzuk.mvvmrunning.repositories
 
-import dev.jatzuk.mvvmrunning.database.Run
-import dev.jatzuk.mvvmrunning.database.RunDAO
+import dev.jatzuk.mvvmrunning.db.Run
+import dev.jatzuk.mvvmrunning.db.RunDAO
 import javax.inject.Inject
 
 class MainRepository @Inject constructor(val runDAO: RunDAO) {

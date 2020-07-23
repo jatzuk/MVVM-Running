@@ -1,4 +1,4 @@
-package dev.jatzuk.mvvmrunning.database
+package dev.jatzuk.mvvmrunning.db
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory

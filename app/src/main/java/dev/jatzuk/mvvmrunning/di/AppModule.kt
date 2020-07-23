@@ -7,7 +7,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dev.jatzuk.mvvmrunning.database.RunningDatabase
+import dev.jatzuk.mvvmrunning.db.RunningDatabase
 import dev.jatzuk.mvvmrunning.other.Constants.RUNNING_DATABASE_NAME
 import javax.inject.Singleton
 
