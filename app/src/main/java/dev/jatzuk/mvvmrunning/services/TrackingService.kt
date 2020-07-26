@@ -41,10 +41,6 @@ class TrackingService : LifecycleService() {
 
     private var isFirstRun = true
     private val isTracking = MutableLiveData(TrackingRepository.isTracking)
-        get() {
-            field.value = TrackingRepository.isTracking
-            return field
-        }
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
