@@ -1,6 +1,5 @@
 package dev.jatzuk.mvvmrunning.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -15,14 +14,12 @@ import com.google.android.gms.maps.model.PolylineOptions
 import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.databinding.FragmentTrackingBinding
-import dev.jatzuk.mvvmrunning.other.Constants.ACTION_PAUSE_SERVICE
-import dev.jatzuk.mvvmrunning.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.MAP_ZOOM
 import dev.jatzuk.mvvmrunning.other.Constants.POLYLINE_COLOR
 import dev.jatzuk.mvvmrunning.other.Constants.POLYLINE_WIDTH
 import dev.jatzuk.mvvmrunning.other.MapLifecycleObserver
+import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.repositories.Polyline
-import dev.jatzuk.mvvmrunning.services.TrackingService
 import dev.jatzuk.mvvmrunning.ui.viewmodels.MainViewModel
 import dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel
 
@@ -72,20 +69,16 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
     }
 
     private fun subscribeToObservers() {
-        trackingViewModel.isTracking.observe(viewLifecycleOwner, Observer {
-            toggleRun(it)
-        })
-
         trackingViewModel.pathPoints.observe(viewLifecycleOwner, Observer {
             pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
         })
-    }
 
-    private fun toggleRun(isTracking: Boolean) {
-        if (isTracking) sendCommandToService(ACTION_START_OR_RESUME_SERVICE)
-        else sendCommandToService(ACTION_PAUSE_SERVICE)
+        trackingViewModel.currentTimeInMillis.observe(viewLifecycleOwner, Observer {
+            val formattedTime = TrackingUtility.getFormattedStopWatchTime(it, true)
+            binding.tvTimer.text = formattedTime
+        })
     }
 
     private fun moveCameraToUser() {
@@ -120,12 +113,6 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
             map?.addPolyline(polylineOptions)
         }
     }
-
-    private fun sendCommandToService(action: String) =
-        Intent(requireContext(), TrackingService::class.java).also {
-            it.action = action
-            requireContext().startService(it)
-        }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

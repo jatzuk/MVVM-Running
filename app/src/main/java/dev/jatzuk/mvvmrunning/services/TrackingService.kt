@@ -14,7 +14,6 @@ import android.os.Looper
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.lifecycle.LifecycleService
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
@@ -34,18 +33,18 @@ import dev.jatzuk.mvvmrunning.other.Constants.NOTIFICATION_CHANNEL_NAME
 import dev.jatzuk.mvvmrunning.other.Constants.NOTIFICATION_ID
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
+import dev.jatzuk.mvvmrunning.repositories.TrackingRepository.isTracking
 import dev.jatzuk.mvvmrunning.ui.MainActivity
 import timber.log.Timber
 
 class TrackingService : LifecycleService() {
 
     private var isFirstRun = true
-    private val isTracking = MutableLiveData(TrackingRepository.isTracking)
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
             super.onLocationResult(locationResult)
-            if (TrackingRepository.isTracking) {
+            if (isTracking.value!!) {
                 locationResult?.locations?.forEach(::addPathPoint)
             }
         }
@@ -59,7 +58,7 @@ class TrackingService : LifecycleService() {
         fusedLocationProviderClient = FusedLocationProviderClient(this)
 
         isTracking.observe(this, Observer {
-            updateLocationTracking(!it)
+            updateLocationTracking(it)
         })
     }
 
@@ -98,13 +97,15 @@ class TrackingService : LifecycleService() {
                     if (isFirstRun) {
                         startForegroundService()
                         isFirstRun = false
+                        TrackingRepository.startTimer()
                     } else {
-                        startForegroundService()
                         Timber.d("Resuming service...")
+                        TrackingRepository.startTimer()
                     }
                 }
                 ACTION_PAUSE_SERVICE -> {
                     Timber.d("Paused service")
+                    TrackingRepository.pauseTimer()
                 }
                 ACTION_STOP_SERVICE -> {
                     Timber.d("Stop service")
@@ -115,8 +116,6 @@ class TrackingService : LifecycleService() {
     }
 
     private fun startForegroundService() {
-        TrackingRepository.startTracking()
-
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

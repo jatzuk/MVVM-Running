@@ -1,93 +1,95 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <import type="android.view.View" />
 
+        <import type="android.content.Context" />
+
         <variable
-            name="viewModel"
-            type="dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel" />
+                name="viewModel"
+                type="dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/clInnerLayout"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/md_blue_800"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mapView">
+                android:id="@+id/clInnerLayout"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:background="@color/md_blue_800"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/mapView">
 
             <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvTimer"
+                    android:id="@+id/tvTimer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/time_placeholder"
+                    android:textSize="50sp"
+                    app:layout_constraintBottom_toTopOf="@+id/btnToggleRun"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnToggleRun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/start"
+                    android:onClick="@{() -> viewModel.sendCommandToService(context)}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@+id/btnFinishRun"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTimer"
+                    app:toggleRunText="@{viewModel.isTracking}" />
+
+            <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFinishRun"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/finish_run"
+                    android:visibility="@{viewModel.isTracking ? View.GONE : View.VISIBLE}"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/btnToggleRun"
+                    app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvLetsGo"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/time_placeholder"
+                android:text="@string/let_s_go_username"
+                android:textAlignment="center"
                 android:textSize="50sp"
-                app:layout_constraintBottom_toTopOf="@+id/btnToggleRun"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@+id/clInnerLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnToggleRun"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.toggleRun()}"
-                android:text="@string/start"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnFinishRun"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTimer"
-                app:toggleRunText="@{viewModel.isTracking}" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnFinishRun"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/finish_run"
-                android:visibility="@{viewModel.isTracking ? View.GONE : View.VISIBLE}"
-                app:layout_constraintBottom_toBottomOf="parent"
+        <com.google.android.gms.maps.MapView
+                android:id="@+id/mapView"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:layout_constraintBottom_toTopOf="@+id/clInnerLayout"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/btnToggleRun"
-                app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
-
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tvLetsGo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/let_s_go_username"
-            android:textAlignment="center"
-            android:textSize="50sp"
-            android:visibility="gone"
-            app:layout_constraintBottom_toTopOf="@+id/clInnerLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/mapView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toTopOf="@+id/clInnerLayout"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
