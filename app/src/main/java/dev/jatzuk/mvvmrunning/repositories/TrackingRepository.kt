@@ -1,5 +1,6 @@
 package dev.jatzuk.mvvmrunning.repositories
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
 import dev.jatzuk.mvvmrunning.other.Constants
@@ -13,12 +14,18 @@ typealias Polylines = MutableList<Polyline>
 
 object TrackingRepository {
 
-    var isTracking = MutableLiveData(false)
-    val pathPoints = MutableLiveData<Polylines>()
+    private val _isTracking = MutableLiveData(false)
+    val isTracking: LiveData<Boolean> = _isTracking
 
-    val timeRunInMillis = MutableLiveData(0L)
+    private val _pathPoints = MutableLiveData<Polylines>()
+    val pathPoints: LiveData<Polylines> = _pathPoints
 
-    private val timeRunInSeconds = MutableLiveData(0L)
+    private val _timeRunInMillis = MutableLiveData(0L)
+    val timeRunInMillis: LiveData<Long> = _timeRunInMillis
+
+    private val _timeRunInSeconds = MutableLiveData(0L)
+    val timeRunInSeconds: LiveData<Long> = _timeRunInSeconds
+
     private var isTimerEnabled = false
     private var lapTime = 0L
     private var timeRun = 0L
@@ -26,12 +33,12 @@ object TrackingRepository {
     private var lastSecondTimestamp = 0L
 
     fun initStartingValues() {
-        pathPoints.value = mutableListOf()
+        _pathPoints.value = mutableListOf()
     }
 
     private fun startTracking() {
         addEmptyPolyline()
-        isTracking.value = true
+        _isTracking.value = true
     }
 
     fun startTimer() {
@@ -40,12 +47,12 @@ object TrackingRepository {
         isTimerEnabled = true
 
         CoroutineScope(Dispatchers.Main).launch {
-            while (isTracking.value!!) {
+            while (_isTracking.value!!) {
                 lapTime = System.currentTimeMillis() - timeStarted
-                timeRunInMillis.postValue(timeRun + lapTime)
+                _timeRunInMillis.postValue(timeRun + lapTime)
 
-                if (timeRunInMillis.value!! >= lastSecondTimestamp + 1000L) {
-                    timeRunInSeconds.postValue(timeRunInSeconds.value!! + 1)
+                if (_timeRunInMillis.value!! >= lastSecondTimestamp + 1000L) {
+                    _timeRunInSeconds.postValue(_timeRunInSeconds.value!! + 1)
                     lastSecondTimestamp += 1000L
                 }
 
@@ -57,7 +64,7 @@ object TrackingRepository {
     }
 
     fun pauseTimer() {
-        isTracking.value = false
+        _isTracking.value = false
         isTimerEnabled = false
     }
 
@@ -66,11 +73,11 @@ object TrackingRepository {
     }
 
     fun addPoint(latLng: LatLng) {
-        pathPoints.value?.last()?.add(latLng)
-        pathPoints.postValue(pathPoints.value)
+        _pathPoints.value?.last()?.add(latLng)
+        _pathPoints.postValue(_pathPoints.value)
     }
 
     private fun addEmptyPolyline() {
-        pathPoints.value?.add(mutableListOf())
+        _pathPoints.value?.add(mutableListOf())
     }
 }

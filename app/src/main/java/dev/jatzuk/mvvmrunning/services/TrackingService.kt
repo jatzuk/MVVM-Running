@@ -21,9 +21,9 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationRequest.PRIORITY_HIGH_ACCURACY
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
+import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_PAUSE_SERVICE
-import dev.jatzuk.mvvmrunning.other.Constants.ACTION_SHOW_TRACKING_FRAGMENT
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_STOP_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.FASTEST_LOCATION_INTERVAL
@@ -34,9 +34,11 @@ import dev.jatzuk.mvvmrunning.other.Constants.NOTIFICATION_ID
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository.isTracking
-import dev.jatzuk.mvvmrunning.ui.MainActivity
+import dev.jatzuk.mvvmrunning.repositories.TrackingRepository.timeRunInSeconds
 import timber.log.Timber
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class TrackingService : LifecycleService() {
 
     private var isFirstRun = true
@@ -50,15 +52,19 @@ class TrackingService : LifecycleService() {
         }
     }
 
+    @Inject
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+
+    @Inject
+    lateinit var baseNotificationBuilder: NotificationCompat.Builder
 
     override fun onCreate() {
         super.onCreate()
         TrackingRepository.initStartingValues()
-        fusedLocationProviderClient = FusedLocationProviderClient(this)
 
         isTracking.observe(this, Observer {
             updateLocationTracking(it)
+            updateNotificationTrackingState(it)
         })
     }
 
@@ -115,6 +121,31 @@ class TrackingService : LifecycleService() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    @SuppressLint("RestrictedApi")
+    private fun updateNotificationTrackingState(isTracking: Boolean) {
+        val notificationActionText =
+            if (isTracking) getString(R.string.pause_action)
+            else getString(R.string.resume_action)
+
+        val pendingIntent = PendingIntent.getService(
+            this,
+            if (isTracking) 1 else 2,
+            Intent(this, TrackingService::class.java).apply {
+                action = if (isTracking) ACTION_PAUSE_SERVICE else ACTION_START_OR_RESUME_SERVICE
+            },
+            FLAG_UPDATE_CURRENT
+        )
+
+        baseNotificationBuilder.apply {
+            mActions.clear()
+            addAction(R.drawable.ic_pause_black_24dp, notificationActionText, pendingIntent)
+        }
+
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.notify(NOTIFICATION_ID, baseNotificationBuilder.build())
+    }
+
     private fun startForegroundService() {
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -123,25 +154,14 @@ class TrackingService : LifecycleService() {
             createNotificationChannel(notificationManager)
         }
 
-        val notificationBuilder = NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
-            .setAutoCancel(false)
-            .setOngoing(true)
-            .setSmallIcon(R.drawable.ic_directions_run_black_24dp)
-            .setContentTitle("Running App")
-            .setContentText("00:00:00")
-            .setContentIntent(getMainActivityPendingIntent())
+        startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
-        startForeground(NOTIFICATION_ID, notificationBuilder.build())
+        timeRunInSeconds.observe(this, Observer {
+            baseNotificationBuilder
+                .setContentText(TrackingUtility.getFormattedStopWatchTime(it * 1000L))
+            notificationManager.notify(NOTIFICATION_ID, baseNotificationBuilder.build())
+        })
     }
-
-    private fun getMainActivityPendingIntent() = PendingIntent.getActivity(
-        this,
-        0,
-        Intent(this, MainActivity::class.java).also {
-            it.action = ACTION_SHOW_TRACKING_FRAGMENT
-        },
-        FLAG_UPDATE_CURRENT
-    )
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun createNotificationChannel(notificationManager: NotificationManager) {
