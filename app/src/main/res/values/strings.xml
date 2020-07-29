@@ -22,4 +22,13 @@
     <string name="pause_action">Pause</string>
     <string name="resume_action">Resume</string>
     <string name="cancel_run">Cancel Run</string>
+    <string name="distance_binding_format">%s km</string>
+    <string name="avg_speed_binding_format">%s km/h</string>
+    <string name="calories_burned_binding_format">%s kcal</string>
+    <string name="avgspeed_holder">AVGSPEED</string>
+    <string name="calories_holder">CALORIES</string>
+    <string name="distance_holder">DISTANCE</string>
+    <string name="time_holder">TIME</string>
+    <string name="date_holder">DATE</string>
+    <string name="track_snapshot">Track snapshot</string>
 </resources>

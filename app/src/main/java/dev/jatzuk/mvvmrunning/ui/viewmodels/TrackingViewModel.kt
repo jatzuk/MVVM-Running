@@ -26,6 +26,8 @@ class TrackingViewModel @ViewModelInject constructor(
     val pathPoints = TrackingRepository.pathPoints
     val currentTimeInMillis = TrackingRepository.timeRunInMillis
 
+    val runsSortedByDate = mainRepository.getAllRunsSortedByDate()
+
     val weight = 80f
 
     fun sendCommandToService(context: Context) {
