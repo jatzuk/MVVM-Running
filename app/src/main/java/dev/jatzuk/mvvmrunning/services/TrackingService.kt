@@ -33,15 +33,15 @@ import dev.jatzuk.mvvmrunning.other.Constants.NOTIFICATION_CHANNEL_NAME
 import dev.jatzuk.mvvmrunning.other.Constants.NOTIFICATION_ID
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
-import dev.jatzuk.mvvmrunning.repositories.TrackingRepository.isTracking
-import dev.jatzuk.mvvmrunning.repositories.TrackingRepository.timeRunInSeconds
+import dev.jatzuk.mvvmrunning.repositories.TrackingRepository.Companion.isTracking
 import timber.log.Timber
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class TrackingService : LifecycleService() {
 
-    private var isFirstRun = true
+    @Inject
+    lateinit var trackingRepository: TrackingRepository
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
@@ -60,7 +60,7 @@ class TrackingService : LifecycleService() {
 
     override fun onCreate() {
         super.onCreate()
-        TrackingRepository.initStartingValues()
+        trackingRepository.initStartingValues()
 
         isTracking.observe(this, Observer {
             updateLocationTracking(it)
@@ -70,7 +70,7 @@ class TrackingService : LifecycleService() {
 
     private fun addPathPoint(location: Location?) {
         location?.let {
-            TrackingRepository.addPoint(LatLng(it.latitude, it.longitude))
+            trackingRepository.addPoint(LatLng(it.latitude, it.longitude))
         }
     }
 
@@ -99,22 +99,22 @@ class TrackingService : LifecycleService() {
         intent?.let {
             when (it.action) {
                 ACTION_START_OR_RESUME_SERVICE -> {
-                    Timber.d("Started or resumed service, first run: $isFirstRun")
-                    if (isFirstRun) {
+                    Timber.d("Started or resumed service, first run: ${trackingRepository.isFirstRun}")
+                    if (trackingRepository.isFirstRun) {
                         startForegroundService()
-                        isFirstRun = false
-                        TrackingRepository.startTimer()
+                        trackingRepository.startRun(true)
                     } else {
                         Timber.d("Resuming service...")
-                        TrackingRepository.startTimer()
+                        trackingRepository.startRun()
                     }
                 }
                 ACTION_PAUSE_SERVICE -> {
                     Timber.d("Paused service")
-                    TrackingRepository.pauseTimer()
+                    trackingRepository.pauseRun()
                 }
                 ACTION_STOP_SERVICE -> {
-                    Timber.d("Stop service")
+                    Timber.d("Stopped service")
+                    killService()
                 }
             }
         }
@@ -141,9 +141,11 @@ class TrackingService : LifecycleService() {
             addAction(R.drawable.ic_pause_black_24dp, notificationActionText, pendingIntent)
         }
 
-        val notificationManager =
-            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-        notificationManager.notify(NOTIFICATION_ID, baseNotificationBuilder.build())
+        if (!trackingRepository.isCancelled) {
+            val notificationManager =
+                getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            notificationManager.notify(NOTIFICATION_ID, baseNotificationBuilder.build())
+        }
     }
 
     private fun startForegroundService() {
@@ -156,10 +158,12 @@ class TrackingService : LifecycleService() {
 
         startForeground(NOTIFICATION_ID, baseNotificationBuilder.build())
 
-        timeRunInSeconds.observe(this, Observer {
-            baseNotificationBuilder
-                .setContentText(TrackingUtility.getFormattedStopWatchTime(it * 1000L))
-            notificationManager.notify(NOTIFICATION_ID, baseNotificationBuilder.build())
+        TrackingRepository.timeRunInSeconds.observe(this, Observer {
+            if (!trackingRepository.isCancelled) {
+                baseNotificationBuilder
+                    .setContentText(TrackingUtility.getFormattedStopWatchTime(it * 1000L))
+                notificationManager.notify(NOTIFICATION_ID, baseNotificationBuilder.build())
+            }
         })
     }
 
@@ -172,5 +176,11 @@ class TrackingService : LifecycleService() {
         )
 
         notificationManager.createNotificationChannel(channel)
+    }
+
+    private fun killService() {
+        trackingRepository.cancelRun()
+        stopForeground(true)
+        stopSelf()
     }
 }

@@ -21,4 +21,5 @@
     <string name="running_app">Running App</string>
     <string name="pause_action">Pause</string>
     <string name="resume_action">Resume</string>
+    <string name="cancel_run">Cancel Run</string>
 </resources>

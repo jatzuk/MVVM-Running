@@ -5,6 +5,7 @@ import android.content.Intent
 import androidx.lifecycle.ViewModel
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_PAUSE_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_START_OR_RESUME_SERVICE
+import dev.jatzuk.mvvmrunning.other.Constants.ACTION_STOP_SERVICE
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
 import dev.jatzuk.mvvmrunning.services.TrackingService
 
@@ -20,6 +21,13 @@ class TrackingViewModel : ViewModel() {
             else ACTION_START_OR_RESUME_SERVICE
         Intent(context, TrackingService::class.java).also {
             it.action = action
+            context.startService(it)
+        }
+    }
+
+    fun setCancelCommand(context: Context) {
+        Intent(context, TrackingService::class.java).also {
+            it.action = ACTION_STOP_SERVICE
             context.startService(it)
         }
     }
