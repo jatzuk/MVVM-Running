@@ -11,7 +11,7 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.databinding.FragmentRunBinding
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
-import dev.jatzuk.mvvmrunning.ui.viewmodels.MainViewModel
+import dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
@@ -21,7 +21,7 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
     private var _binding: FragmentRunBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: MainViewModel by viewModels()
+    private val viewModel: TrackingViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
