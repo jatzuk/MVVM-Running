@@ -34,6 +34,10 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentRunBinding.inflate(inflater, container, false)
+
+        binding.lifecycleOwner = this
+        binding.viewModel = trackingViewModel
+
         return binding.root
     }
 
@@ -42,7 +46,7 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
         TrackingUtility.requestPermissions(this)
         setupRecyclerView()
 
-        trackingViewModel.runsSortedByDate.observe(viewLifecycleOwner, Observer {
+        trackingViewModel.runs.observe(viewLifecycleOwner, Observer {
             runAdapter.submitList(it)
         })
 

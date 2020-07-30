@@ -5,6 +5,7 @@ import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -22,6 +23,7 @@ import dev.jatzuk.mvvmrunning.other.MapLifecycleObserver
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository.Companion.pathPoints
 import dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel
+import timber.log.Timber
 
 @AndroidEntryPoint
 class TrackingFragment : Fragment(R.layout.fragment_tracking) {
@@ -148,9 +150,16 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
             }
         }
 
+        val latLngBounds = try {
+            bounds.build()
+        } catch (e: IllegalStateException) {
+            Timber.e(e, "Cannot find any path points, associated with this run")
+            return
+        }
+
         map?.moveCamera(
             CameraUpdateFactory.newLatLngBounds(
-                bounds.build(),
+                latLngBounds,
                 mapView!!.width,
                 mapView!!.height,
                 (mapView!!.height * 0.05f).toInt()
@@ -168,6 +177,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
                 Snackbar.LENGTH_LONG
             ).show()
         }
+        findNavController().navigate(R.id.action_trackingFragment_to_runFragment)
     }
 
     private fun addLatestPolyline() {
