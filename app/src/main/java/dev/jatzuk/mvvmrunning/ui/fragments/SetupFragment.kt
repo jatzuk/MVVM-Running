@@ -1,6 +1,5 @@
 package dev.jatzuk.mvvmrunning.ui.fragments
 
-import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,13 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.databinding.FragmentSetupBinding
-import dev.jatzuk.mvvmrunning.other.Constants.KEY_FIRST_TIME_TOGGLE
-import dev.jatzuk.mvvmrunning.other.Constants.KEY_NAME
-import dev.jatzuk.mvvmrunning.other.Constants.KEY_WEIGHT
-import kotlinx.android.synthetic.main.activity_main.*
+import dev.jatzuk.mvvmrunning.db.UserInfo
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -25,10 +22,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
     private val binding get() = _binding!!
 
     @Inject
-    lateinit var sharedPreferences: SharedPreferences
-
-    @set:Inject
-    var isFirstAppOpen = true
+    lateinit var userInfo: UserInfo
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -37,7 +31,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
     ): View? {
         _binding = FragmentSetupBinding.inflate(inflater, container, false)
 
-        if (!isFirstAppOpen) {
+        if (!userInfo.isFirstToggle) {
             val navOptions = NavOptions.Builder()
                 .setPopUpTo(R.id.setupFragment, true)
                 .build()
@@ -57,8 +51,11 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
         binding.tvContinue.setOnClickListener {
             val success = writePersonalDataToSharedPreferences()
             if (success) findNavController().navigate(R.id.action_setupFragment_to_runFragment)
-            else Snackbar.make(requireView(), "Please enter all the fields", Snackbar.LENGTH_LONG)
-                .show()
+            else Snackbar.make(
+                requireView(),
+                getString(R.string.please_fill_all_fields),
+                Snackbar.LENGTH_LONG
+            ).show()
         }
     }
 
@@ -68,13 +65,9 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
 
         if (name.isEmpty() or weight.isEmpty()) return false
 
-        sharedPreferences.edit()
-            .putString(KEY_NAME, name)
-            .putFloat(KEY_WEIGHT, weight.toFloat())
-            .putBoolean(KEY_FIRST_TIME_TOGGLE, false)
-            .apply()
+        userInfo.applyChanges(name, weight.toFloat(), false)
 
-        requireActivity().tvToolbarTitle.text =
+        requireActivity().findViewById<MaterialTextView>(R.id.tvToolbarTitle).text =
             context?.getString(R.string.let_s_go_username, name)
         return true
     }

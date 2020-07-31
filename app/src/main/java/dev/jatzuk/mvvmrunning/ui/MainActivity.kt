@@ -10,6 +10,7 @@ import androidx.navigation.ui.setupWithNavController
 import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.databinding.ActivityMainBinding
+import dev.jatzuk.mvvmrunning.db.UserInfo
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_SHOW_TRACKING_FRAGMENT
 import javax.inject.Inject
 
@@ -18,8 +19,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
 
-    @set:Inject
-    var name: String? = "undefined"
+    @Inject
+    lateinit var userInfo: UserInfo
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +35,7 @@ class MainActivity : AppCompatActivity() {
 
         binding.apply {
             bottomNavigationView.setupWithNavController(navController)
-            tvToolbarTitle.text = getString(R.string.let_s_go_username, name)
+            tvToolbarTitle.text = getString(R.string.let_s_go_username, userInfo.name)
         }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->

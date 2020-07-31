@@ -10,6 +10,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dev.jatzuk.mvvmrunning.db.RunningDatabase
+import dev.jatzuk.mvvmrunning.db.UserInfo
 import dev.jatzuk.mvvmrunning.other.Constants.KEY_FIRST_TIME_TOGGLE
 import dev.jatzuk.mvvmrunning.other.Constants.KEY_NAME
 import dev.jatzuk.mvvmrunning.other.Constants.KEY_WEIGHT
@@ -39,7 +40,7 @@ object AppModule {
 
     @Singleton
     @Provides
-    fun provideName(sharedPreferences: SharedPreferences): String? =
+    fun provideName(sharedPreferences: SharedPreferences): String =
         sharedPreferences.getString(KEY_NAME, "User") ?: "User"
 
     @Singleton
@@ -51,4 +52,10 @@ object AppModule {
     @Provides
     fun provideFirstTimeToggle(sharedPreferences: SharedPreferences): Boolean =
         sharedPreferences.getBoolean(KEY_FIRST_TIME_TOGGLE, true)
+
+    @Singleton
+    @Provides
+    fun provideUserInfo(@ApplicationContext context: Context) = UserInfo(
+        provideSharedPreferences(context)
+    )
 }
