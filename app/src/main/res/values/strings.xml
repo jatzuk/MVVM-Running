@@ -17,7 +17,7 @@
     <string name="time_placeholder">00:00:00:00</string>
     <string name="start">Start</string>
     <string name="finish_run">Finish Run</string>
-    <string name="let_s_go_username">Let\'s go, USERNAME!</string>
+    <string name="let_s_go_username">Let\'s go, %s!</string>
     <string name="running_app">Running App</string>
     <string name="pause_action">Pause</string>
     <string name="resume_action">Resume</string>

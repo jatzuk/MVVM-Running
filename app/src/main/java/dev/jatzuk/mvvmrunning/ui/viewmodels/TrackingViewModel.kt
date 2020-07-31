@@ -18,6 +18,7 @@ import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
 import dev.jatzuk.mvvmrunning.services.TrackingService
 import kotlinx.coroutines.launch
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.round
 
 class TrackingViewModel @ViewModelInject constructor(
@@ -37,7 +38,8 @@ class TrackingViewModel @ViewModelInject constructor(
     var sortType = SortType.DATE
         private set
 
-    val weight = 80f
+    @set:Inject
+    var weight = 80f
 
     init {
         runs.addSource(runsSortedByDate) {

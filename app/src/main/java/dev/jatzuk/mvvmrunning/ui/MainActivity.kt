@@ -11,11 +11,15 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.databinding.ActivityMainBinding
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_SHOW_TRACKING_FRAGMENT
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
     private lateinit var navController: NavController
+
+    @set:Inject
+    var name: String? = "undefined"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +32,10 @@ class MainActivity : AppCompatActivity() {
 
         navigateToTrackingFragmentIfNeeded(intent)
 
-        binding.bottomNavigationView.setupWithNavController(navController)
+        binding.apply {
+            bottomNavigationView.setupWithNavController(navController)
+            tvToolbarTitle.text = getString(R.string.let_s_go_username, name)
+        }
 
         navController.addOnDestinationChangedListener { _, destination, _ ->
             binding.bottomNavigationView.visibility = when (destination.id) {
