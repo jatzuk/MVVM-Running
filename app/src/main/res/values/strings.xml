@@ -44,4 +44,8 @@
     <string name="your_runs">Your Runs</string>
     <string name="statistics">Statistics</string>
     <string name="settings">Settings</string>
+    <string name="error_must_be_provided">%s must be provided</string>
+    <string name="name">Name</string>
+    <string name="weight">Weight</string>
+    <string name="run_saved_successfully">Run saved successfully</string>
 </resources>

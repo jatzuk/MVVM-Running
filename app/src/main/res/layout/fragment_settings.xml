@@ -12,6 +12,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
             app:layout_constraintBottom_toTopOf="@+id/tilWeight"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -30,6 +32,8 @@
             android:id="@+id/tilWeight"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            app:endIconMode="clear_text"
+            app:errorEnabled="true"
             app:layout_constraintBottom_toTopOf="@+id/guideline3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

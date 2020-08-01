@@ -175,7 +175,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
             trackingViewModel.processRun(requireContext(), it)
             Snackbar.make(
                 requireActivity().findViewById(R.id.rootView),
-                "Run saved successfully",
+                getString(R.string.run_saved_successfully),
                 Snackbar.LENGTH_LONG
             ).show()
         }

@@ -38,11 +38,14 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
 
         binding.btnApplyChanges.setOnClickListener {
             val success = applyChangesToSharedPreferences()
-            if (success) loadFieldsFromSharedPreferences()
-            val snackbarText =
-                if (success) getString(R.string.changes_saved)
-                else getString(R.string.please_fill_all_fields)
-            Snackbar.make(requireView(), snackbarText, Snackbar.LENGTH_SHORT).show()
+            if (success) {
+                loadFieldsFromSharedPreferences()
+                Snackbar.make(
+                    requireView(),
+                    getString(R.string.changes_saved),
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
         }
     }
 
@@ -55,7 +58,21 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         val name = binding.etName.text.toString()
         val weight = binding.etWeight.text.toString()
 
-        if (name.isEmpty() || weight.isEmpty()) return false
+        if (name.isEmpty()) {
+            binding.etName.error = requireContext().getString(
+                R.string.error_must_be_provided,
+                requireContext().getString(R.string.name)
+            )
+            return false
+        }
+
+        if (weight.isEmpty()) {
+            binding.etWeight.error = requireContext().getString(
+                R.string.error_must_be_provided,
+                requireContext().getString(R.string.weight)
+            )
+            return false
+        }
 
         userInfo.applyChanges(name, weight.toFloat(), false)
 

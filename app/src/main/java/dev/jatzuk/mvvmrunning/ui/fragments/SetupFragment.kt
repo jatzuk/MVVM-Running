@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textview.MaterialTextView
 import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
@@ -51,11 +50,6 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
         binding.tvContinue.setOnClickListener {
             val success = writePersonalDataToSharedPreferences()
             if (success) findNavController().navigate(R.id.action_setupFragment_to_runFragment)
-            else Snackbar.make(
-                requireView(),
-                getString(R.string.please_fill_all_fields),
-                Snackbar.LENGTH_LONG
-            ).show()
         }
     }
 
@@ -63,7 +57,21 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
         val name = binding.etName.text.toString()
         val weight = binding.etWeight.text.toString()
 
-        if (name.isEmpty() or weight.isEmpty()) return false
+        if (name.isEmpty()) {
+            binding.etName.error = requireContext().getString(
+                R.string.error_must_be_provided,
+                requireContext().getString(R.string.name)
+            )
+            return false
+        }
+
+        if (weight.isEmpty()) {
+            binding.etWeight.error = requireContext().getString(
+                R.string.error_must_be_provided,
+                requireContext().getString(R.string.weight)
+            )
+            return false
+        }
 
         userInfo.applyChanges(name, weight.toFloat(), false)
 
