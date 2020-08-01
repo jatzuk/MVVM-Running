@@ -3,6 +3,7 @@ package dev.jatzuk.mvvmrunning.repositories
 import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
 import dev.jatzuk.mvvmrunning.other.Constants
+import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -53,6 +54,14 @@ class TrackingRepository @Inject constructor() {
                 if (timeRunInMillis.value!! >= lastSecondTimestamp + 1000L) {
                     timeRunInSeconds.postValue(timeRunInSeconds.value!! + 1)
                     lastSecondTimestamp += 1000L
+
+                    var distance = 0L
+                    for (polyline in pathPoints.value!!) {
+                        // TODO update only last sec
+                        distance += TrackingUtility.calculatePolylineLength(polyline).toLong()
+                    }
+                    distanceInMeters.postValue(distance)
+                    caloriesBurned.postValue(((distance / 1000f) * 80f).toLong())
                 }
 
                 delay(Constants.TIMER_UPDATE_INTERVAL)
@@ -71,6 +80,8 @@ class TrackingRepository @Inject constructor() {
         isCancelled = true
         isFirstRun = true
         timeRunInMillis.value = 0L // reset value for correct fragment observers income values
+        distanceInMeters.value = 0L
+        caloriesBurned.value = 0L
         pauseRun()
         initStartingValues()
     }
@@ -93,5 +104,7 @@ class TrackingRepository @Inject constructor() {
         val pathPoints = MutableLiveData<Polylines>()
         val timeRunInMillis = MutableLiveData(0L)
         val timeRunInSeconds = MutableLiveData(0L)
+        val distanceInMeters = MutableLiveData(0L)
+        val caloriesBurned = MutableLiveData(0L)
     }
 }

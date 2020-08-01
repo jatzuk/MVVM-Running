@@ -179,7 +179,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
                 Snackbar.LENGTH_LONG
             ).show()
         }
-        findNavController().navigate(R.id.action_trackingFragment_to_runFragment)
+        findNavController().navigate(R.id.action_trackingFragment_to_runsFragment)
     }
 
     private fun addLatestPolyline() {

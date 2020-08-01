@@ -12,16 +12,16 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.adapters.RunAdapter
-import dev.jatzuk.mvvmrunning.databinding.FragmentRunBinding
+import dev.jatzuk.mvvmrunning.databinding.FragmentRunsBinding
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
 @AndroidEntryPoint
-class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionCallbacks {
+class RunsFragment : Fragment(R.layout.fragment_runs), EasyPermissions.PermissionCallbacks {
 
-    private var _binding: FragmentRunBinding? = null
+    private var _binding: FragmentRunsBinding? = null
     private val binding get() = _binding!!
 
     private val trackingViewModel: TrackingViewModel by viewModels()
@@ -33,7 +33,7 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentRunBinding.inflate(inflater, container, false)
+        _binding = FragmentRunsBinding.inflate(inflater, container, false)
 
         binding.lifecycleOwner = this
         binding.viewModel = trackingViewModel
@@ -51,7 +51,7 @@ class RunFragment : Fragment(R.layout.fragment_run), EasyPermissions.PermissionC
         })
 
         binding.fab.setOnClickListener {
-            findNavController().navigate(R.id.action_runFragment_to_trackingFragment)
+            findNavController().navigate(R.id.action_runsFragment_to_trackingFragment)
         }
     }
 

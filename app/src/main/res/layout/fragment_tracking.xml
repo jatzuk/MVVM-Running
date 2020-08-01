@@ -33,13 +33,63 @@
                 android:id="@+id/tvTimer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
                 android:text="@string/time_placeholder"
                 android:textSize="50sp"
-                app:layout_constraintBottom_toTopOf="@+id/btnToggleRun"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvDistance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/distance_binding_format"
+                android:textSize="30sp"
+                app:currentDistance="@{viewModel.distanceInMeters}"
+                app:layout_constraintEnd_toStartOf="@+id/tvCaloriesBurned"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tvTimer"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvDistanceInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/distance_holder"
+                app:layout_constraintEnd_toEndOf="@+id/tvDistance"
+                app:layout_constraintStart_toStartOf="@+id/tvDistance"
+                app:layout_constraintTop_toBottomOf="@+id/tvDistance" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvCaloriesBurned"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:text="@string/calories_burned_binding_format"
+                android:textSize="30sp"
+                app:currentCaloriesBurned="@{viewModel.caloriesBurned}"
+                app:layout_constraintBottom_toTopOf="@+id/tvCaloriesBurnedInfo"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/tvDistance"
+                app:layout_constraintTop_toBottomOf="@+id/tvTimer"
+                app:layout_constraintVertical_chainStyle="packed" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvCaloriesBurnedInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="@string/calories_holder"
+                app:layout_constraintEnd_toEndOf="@+id/tvCaloriesBurned"
+                app:layout_constraintStart_toStartOf="@+id/tvCaloriesBurned"
+                app:layout_constraintTop_toBottomOf="@+id/tvCaloriesBurned" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnToggleRun"
@@ -51,7 +101,7 @@
                 app:layout_constraintEnd_toStartOf="@+id/btnFinishRun"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTimer"
+                app:layout_constraintTop_toBottomOf="@+id/tvDistanceInfo"
                 app:toggleRunText="@{viewModel.isTracking}" />
 
             <com.google.android.material.button.MaterialButton
@@ -64,7 +114,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toEndOf="@+id/btnToggleRun"
-                app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
+                app:layout_constraintTop_toBottomOf="@+id/tvCaloriesBurnedInfo" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

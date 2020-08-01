@@ -54,7 +54,7 @@ fun MaterialTextView.setCaloriesBurned(run: Run) {
 
 @BindingAdapter("toggleRunText")
 fun MaterialButton.toggleRunText(isTracking: Boolean) {
-    text = if (isTracking) "Pause" else "Start"
+    text = if (isTracking) context.getString(R.string.pause) else context.getString(R.string.start)
 }
 
 @BindingAdapter("setSelection")
@@ -95,4 +95,14 @@ fun MaterialTextView.totalCaloriesBurned(calories: Long) {
 fun MaterialTextView.totalAvgSpeed(avgSpeed: Float) {
     text =
         context.getString(R.string.avg_speed_binding_format, ((avgSpeed * 10f).roundToInt() / 10f))
+}
+
+@BindingAdapter("currentDistance")
+fun MaterialTextView.currentDistance(distance: Long) {
+    text = context.getString(R.string.distance_binding_format_meters, distance)
+}
+
+@BindingAdapter("currentCaloriesBurned")
+fun MaterialTextView.currentCaloriesBurned(calories: Long) {
+    text = context.getString(R.string.calories_burned_binding_format, calories)
 }

@@ -29,6 +29,8 @@ class TrackingViewModel @ViewModelInject constructor(
     val isTracking = TrackingRepository.isTracking
     val pathPoints = TrackingRepository.pathPoints
     val currentTimeInMillis = TrackingRepository.timeRunInMillis
+    val distanceInMeters = TrackingRepository.distanceInMeters
+    val caloriesBurned = TrackingRepository.caloriesBurned
 
     private val runsSortedByDate = mainRepository.getAllRunsSortedByDate()
     private val runsSortedByTime = mainRepository.getAllRunsSortedByTimeInMillis()

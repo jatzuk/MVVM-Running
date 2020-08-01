@@ -124,8 +124,8 @@ class TrackingService : LifecycleService() {
     @SuppressLint("RestrictedApi")
     private fun updateNotificationTrackingState(isTracking: Boolean) {
         val notificationActionText =
-            if (isTracking) getString(R.string.pause_action)
-            else getString(R.string.resume_action)
+            if (isTracking) getString(R.string.pause)
+            else getString(R.string.resume)
 
         val pendingIntent = PendingIntent.getService(
             this,
@@ -160,8 +160,12 @@ class TrackingService : LifecycleService() {
 
         TrackingRepository.timeRunInSeconds.observe(this, Observer {
             if (!trackingRepository.isCancelled) {
+                val time = TrackingUtility.getFormattedStopWatchTime(it * 1000L)
+                val info = "${TrackingRepository.distanceInMeters.value} m | " +
+                        "${TrackingRepository.caloriesBurned.value} kcal"
                 baseNotificationBuilder
-                    .setContentText(TrackingUtility.getFormattedStopWatchTime(it * 1000L))
+                    .setContentTitle(time)
+                    .setContentText(info)
                 notificationManager.notify(NOTIFICATION_ID, baseNotificationBuilder.build())
             }
         })

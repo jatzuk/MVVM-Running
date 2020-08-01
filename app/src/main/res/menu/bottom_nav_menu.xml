@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/runFragment"
+        android:id="@+id/runsFragment"
         android:icon="@drawable/ic_run"
         android:title="@string/your_runs" />
     <item

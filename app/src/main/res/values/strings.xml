@@ -15,14 +15,15 @@
     <string name="continue_label">Continue</string>
     <string name="sort_by">Sort by:</string>
     <string name="time_placeholder">00:00:00:00</string>
-    <string name="start">Start</string>
     <string name="finish_run">Finish Run</string>
     <string name="let_s_go_username">Let\'s go, %s!</string>
     <string name="running_app">Running App</string>
-    <string name="pause_action">Pause</string>
-    <string name="resume_action">Resume</string>
+    <string name="start">Start</string>
+    <string name="pause">Pause</string>
+    <string name="resume">Resume</string>
     <string name="cancel_run">Cancel Run</string>
     <string name="distance_binding_format">%.2f km</string>
+    <string name="distance_binding_format_meters">%d m</string>
     <string name="avg_speed_binding_format">%.2f km/h</string>
     <string name="calories_burned_binding_format">%d kcal</string>
     <string name="avgspeed_holder">AVG SPEED</string>
@@ -48,4 +49,5 @@
     <string name="name">Name</string>
     <string name="weight">Weight</string>
     <string name="run_saved_successfully">Run saved successfully</string>
+    <string name="running">Running</string>
 </resources>

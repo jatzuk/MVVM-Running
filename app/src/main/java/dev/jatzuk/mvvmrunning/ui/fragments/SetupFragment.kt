@@ -32,10 +32,9 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
 
         if (!userInfo.isFirstToggle) {
             val navOptions = NavOptions.Builder()
-                .setPopUpTo(R.id.setupFragment, true)
-                .build()
+                .setPopUpTo(R.id.setupFragment, true).build()
             findNavController().navigate(
-                R.id.action_setupFragment_to_runFragment,
+                R.id.action_setupFragment_to_runsFragment,
                 savedInstanceState,
                 navOptions
             )
@@ -49,7 +48,7 @@ class SetupFragment : Fragment(R.layout.fragment_setup) {
 
         binding.tvContinue.setOnClickListener {
             val success = writePersonalDataToSharedPreferences()
-            if (success) findNavController().navigate(R.id.action_setupFragment_to_runFragment)
+            if (success) findNavController().navigate(R.id.action_setupFragment_to_runsFragment)
         }
     }
 

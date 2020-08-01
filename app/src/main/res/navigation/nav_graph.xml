@@ -14,15 +14,15 @@
         android:name="dev.jatzuk.mvvmrunning.ui.fragments.SetupFragment"
         android:label="SetupFragment">
         <action
-            android:id="@+id/action_setupFragment_to_runFragment"
-            app:destination="@id/runFragment" />
+            android:id="@+id/action_setupFragment_to_runsFragment"
+            app:destination="@id/runsFragment" />
     </fragment>
     <fragment
-        android:id="@+id/runFragment"
-        android:name="dev.jatzuk.mvvmrunning.ui.fragments.RunFragment"
-        android:label="RunFragment">
+        android:id="@+id/runsFragment"
+        android:name="dev.jatzuk.mvvmrunning.ui.fragments.RunsFragment"
+        android:label="RunsFragment">
         <action
-            android:id="@+id/action_runFragment_to_trackingFragment"
+            android:id="@+id/action_runsFragment_to_trackingFragment"
             app:destination="@id/trackingFragment" />
     </fragment>
     <fragment
@@ -34,8 +34,8 @@
         android:name="dev.jatzuk.mvvmrunning.ui.fragments.TrackingFragment"
         android:label="TrackingFragment">
         <action
-            android:id="@+id/action_trackingFragment_to_runFragment"
-            app:destination="@id/runFragment" />
+            android:id="@+id/action_trackingFragment_to_runsFragment"
+            app:destination="@id/runsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"
