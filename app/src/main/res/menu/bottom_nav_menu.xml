@@ -4,14 +4,14 @@
     <item
         android:id="@+id/runFragment"
         android:icon="@drawable/ic_run"
-        android:title="Your Runs" />
+        android:title="@string/your_runs" />
     <item
         android:id="@+id/statisticsFragment"
         android:icon="@drawable/ic_graph"
-        android:title="Statistics" />
+        android:title="@string/statistics" />
     <item
         android:id="@+id/settingsFragment"
         android:icon="@drawable/ic_settings"
-        android:title="Settings" />
+        android:title="@string/settings" />
 
 </menu>

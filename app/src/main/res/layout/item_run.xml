@@ -4,8 +4,6 @@
 
     <data>
 
-        <import type="android.content.Context" />
-
         <variable
             name="run"
             type="dev.jatzuk.mvvmrunning.db.Run" />
@@ -20,12 +18,12 @@
             android:id="@+id/ivRunImage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:contentDescription="@string/track_snapshot"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:loadImage="@{run}"
-            android:contentDescription="@string/track_snapshot" />
+            app:loadImage="@{run}" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvDate"

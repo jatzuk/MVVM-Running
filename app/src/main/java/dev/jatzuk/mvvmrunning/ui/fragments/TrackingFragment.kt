@@ -11,11 +11,11 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLngBounds
 import com.google.android.gms.maps.model.PolylineOptions
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.databinding.FragmentTrackingBinding
+import dev.jatzuk.mvvmrunning.other.Constants.CANCEL_TRACKING_DIALOG_TAG
 import dev.jatzuk.mvvmrunning.other.Constants.MAP_ZOOM
 import dev.jatzuk.mvvmrunning.other.Constants.POLYLINE_COLOR
 import dev.jatzuk.mvvmrunning.other.Constants.POLYLINE_WIDTH
@@ -66,6 +66,15 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        if (savedInstanceState != null) {
+            val cancelTrackingDialog = parentFragmentManager.findFragmentByTag(
+                CANCEL_TRACKING_DIALOG_TAG
+            ) as CancelTrackingDialog?
+            cancelTrackingDialog?.setPositiveButtonListener {
+                trackingViewModel.setCancelCommand(requireContext())
+            }
+        }
+
         mapView?.let { mapView ->
             mapView.onCreate(savedInstanceState)
             mapView.getMapAsync {
@@ -83,9 +92,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         super.onPrepareOptionsMenu(menu)
-        if (trackingViewModel.isTracking.value!!) {
-            menu.getItem(0).isVisible = true
-        }
+        menu.getItem(0).isVisible = trackingViewModel.currentTimeInMillis.value!! > 0L
     }
 
     override fun onOptionsItemSelected(item: MenuItem) = when (item.itemId) {
@@ -97,14 +104,9 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
     }
 
     private fun showCancelTrackingDialog() {
-        val dialog = MaterialAlertDialogBuilder(requireContext(), R.style.AlertDialogTheme)
-            .setTitle("Cancel the Run?")
-            .setMessage("Are you sure to cancel the current run and delete all its data?")
-            .setIcon(R.drawable.ic_delete)
-            .setPositiveButton("Yes") { _, _ -> trackingViewModel.setCancelCommand(requireContext()) }
-            .setNegativeButton("No") { dialog, _ -> dialog.cancel() }
-            .create()
-        dialog.show()
+        CancelTrackingDialog().apply {
+            setPositiveButtonListener { trackingViewModel.setCancelCommand(requireContext()) }
+        }.show(parentFragmentManager, CANCEL_TRACKING_DIALOG_TAG)
     }
 
     private fun subscribeToObservers() {

@@ -25,7 +25,7 @@
     <string name="distance_binding_format">%.2f km</string>
     <string name="avg_speed_binding_format">%.2f km/h</string>
     <string name="calories_burned_binding_format">%d kcal</string>
-    <string name="avgspeed_holder">AVGSPEED</string>
+    <string name="avgspeed_holder">AVG SPEED</string>
     <string name="calories_holder">CALORIES</string>
     <string name="distance_holder">DISTANCE</string>
     <string name="time_holder">TIME</string>
@@ -38,9 +38,10 @@
     <string name="your_name">Your Name</string>
     <string name="total_distance">Total Distance</string>
     <string name="total_time">Total Time</string>
-    <string name="_00_00_00">00:00:00</string>
     <string name="total_calories_burned">Total Calories Burned</string>
-    <string name="_0kcal">0kcal</string>
-    <string name="_0km_h">0km/h</string>
     <string name="average_speed">Average Speed</string>
+    <string name="whats_your_track_for_today">Whats your track for today?</string>
+    <string name="your_runs">Your Runs</string>
+    <string name="statistics">Statistics</string>
+    <string name="settings">Settings</string>
 </resources>

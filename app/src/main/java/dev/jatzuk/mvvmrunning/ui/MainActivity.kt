@@ -33,8 +33,11 @@ class MainActivity : AppCompatActivity() {
 
         navigateToTrackingFragmentIfNeeded(intent)
 
-        binding.apply {
-            bottomNavigationView.setupWithNavController(navController)
+        with(binding) {
+            bottomNavigationView.apply {
+                setupWithNavController(navController)
+                setOnNavigationItemReselectedListener { /* no-op */ }
+            }
             tvToolbarTitle.text = getString(R.string.let_s_go_username, userInfo.name)
         }
 

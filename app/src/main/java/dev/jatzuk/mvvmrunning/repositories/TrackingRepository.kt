@@ -70,6 +70,7 @@ class TrackingRepository @Inject constructor() {
     fun cancelRun() {
         isCancelled = true
         isFirstRun = true
+        timeRunInMillis.value = 0L // reset value for correct fragment observers income values
         pauseRun()
         initStartingValues()
     }

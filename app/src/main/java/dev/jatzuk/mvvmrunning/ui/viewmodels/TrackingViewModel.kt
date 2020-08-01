@@ -8,6 +8,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.jatzuk.mvvmrunning.db.Run
+import dev.jatzuk.mvvmrunning.db.UserInfo
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_PAUSE_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_STOP_SERVICE
@@ -18,11 +19,11 @@ import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
 import dev.jatzuk.mvvmrunning.services.TrackingService
 import kotlinx.coroutines.launch
 import java.util.*
-import javax.inject.Inject
 import kotlin.math.round
 
 class TrackingViewModel @ViewModelInject constructor(
-    private val mainRepository: MainRepository
+    private val mainRepository: MainRepository,
+    private val userInfo: UserInfo
 ) : ViewModel() {
 
     val isTracking = TrackingRepository.isTracking
@@ -37,9 +38,6 @@ class TrackingViewModel @ViewModelInject constructor(
     val runs = MediatorLiveData<List<Run>>()
     var sortType = SortType.DATE
         private set
-
-    @set:Inject
-    var weight = 80f
 
     init {
         runs.addSource(runsSortedByDate) {
@@ -97,7 +95,7 @@ class TrackingViewModel @ViewModelInject constructor(
         val avgSpeed = round(
             (distanceInMeters / 1000f) / (currentTimeInMillis.value!! / 1000f / 60 / 60) * 10
         ) / 10f
-        val caloriesBurned = ((distanceInMeters / 1000f) * weight).toInt()
+        val caloriesBurned = ((distanceInMeters / 1000f) * userInfo.weight).toInt()
         val run = Run(
             bitmap,
             dateTimestamp,
