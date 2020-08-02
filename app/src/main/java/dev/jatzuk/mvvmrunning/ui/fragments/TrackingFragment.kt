@@ -22,7 +22,7 @@ import dev.jatzuk.mvvmrunning.other.Constants.MAP_ZOOM
 import dev.jatzuk.mvvmrunning.other.Constants.POLYLINE_COLOR
 import dev.jatzuk.mvvmrunning.other.Constants.POLYLINE_WIDTH
 import dev.jatzuk.mvvmrunning.other.MapLifecycleObserver
-import dev.jatzuk.mvvmrunning.other.MusicAppsPackages
+import dev.jatzuk.mvvmrunning.other.MusicApps
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository.Companion.pathPoints
 import dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel
@@ -207,7 +207,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
         val packageManager = requireActivity().packageManager
         val intent = Intent()
 
-        for (app in MusicAppsPackages.values()) {
+        for (app in MusicApps.values()) {
             if (isPackageInstalled(app.packagePath)) {
                 intent.selector = packageManager.getLaunchIntentForPackage(app.packagePath)
                 break
