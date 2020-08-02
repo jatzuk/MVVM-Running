@@ -1,5 +1,7 @@
 package dev.jatzuk.mvvmrunning.ui.fragments
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.*
 import androidx.fragment.app.Fragment
@@ -20,6 +22,7 @@ import dev.jatzuk.mvvmrunning.other.Constants.MAP_ZOOM
 import dev.jatzuk.mvvmrunning.other.Constants.POLYLINE_COLOR
 import dev.jatzuk.mvvmrunning.other.Constants.POLYLINE_WIDTH
 import dev.jatzuk.mvvmrunning.other.MapLifecycleObserver
+import dev.jatzuk.mvvmrunning.other.MusicAppsPackages
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository.Companion.pathPoints
 import dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel
@@ -58,6 +61,10 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
 
         binding.btnFinishRun.setOnClickListener {
             finishRun()
+        }
+
+        binding.ivLaunchMusicPlayer.setOnClickListener {
+            startMusicPlayer()
         }
 
         return binding.root
@@ -195,6 +202,33 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
             map?.addPolyline(polylineOptions)
         }
     }
+
+    private fun startMusicPlayer() {
+        val packageManager = requireActivity().packageManager
+        val intent = Intent()
+
+        for (app in MusicAppsPackages.values()) {
+            if (isPackageInstalled(app.packagePath)) {
+                intent.selector = packageManager.getLaunchIntentForPackage(app.packagePath)
+                break
+            }
+        }
+
+        if (intent.selector != null) {
+            startActivity(intent)
+        } else {
+            Snackbar.make(requireView(), getString(R.string.no_music_app), Snackbar.LENGTH_LONG)
+                .show()
+        }
+    }
+
+    private fun isPackageInstalled(packageName: String) =
+        try {
+            requireActivity().packageManager.getPackageInfo(packageName, 0)
+            true
+        } catch (e: PackageManager.NameNotFoundException) {
+            false
+        }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
