@@ -4,7 +4,7 @@ import dev.jatzuk.mvvmrunning.db.Run
 import dev.jatzuk.mvvmrunning.db.RunDAO
 import javax.inject.Inject
 
-class MainRepository @Inject constructor(val runDAO: RunDAO) {
+class MainRepository @Inject constructor(private val runDAO: RunDAO) {
 
     suspend fun insertRun(run: Run) = runDAO.insertRun(run)
 

@@ -7,6 +7,12 @@
         <item>Average Speed</item>
         <item>Calories Burned</item>
     </string-array>
+    <string-array name="target_types">
+        <item>Time</item>
+        <item>Distance</item>
+        <item>Calories</item>
+        <item>None</item>
+    </string-array>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBuhhawpoGghH-trqUuTp5MqrgwfZOGIyg</string>
     <string name="welcome_text">Welcome!\nPlease enter your name and weight.</string>
     <string name="name_hint">Your Name</string>
@@ -48,8 +54,12 @@
     <string name="error_must_be_provided">%s must be provided</string>
     <string name="name">Name</string>
     <string name="weight">Weight</string>
+    <string name="target_value">Target Value</string>
     <string name="run_saved_successfully">Run saved successfully</string>
     <string name="running">Running</string>
     <string name="location_permissions_required_info">You need to accept location permissions to use this app.</string>
     <string name="no_music_app">No music app found on the device</string>
+    <string name="target">TARGET</string>
+    <string name="progress_binding_format">%d %%</string>
+    <string name="your_target">Your target</string>
 </resources>

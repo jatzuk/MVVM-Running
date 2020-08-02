@@ -3,6 +3,7 @@ package dev.jatzuk.mvvmrunning.adapters
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Spinner
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -105,4 +106,14 @@ fun MaterialTextView.currentDistance(distance: Long) {
 @BindingAdapter("currentCaloriesBurned")
 fun MaterialTextView.currentCaloriesBurned(calories: Long) {
     text = context.getString(R.string.calories_burned_binding_format, calories)
+}
+
+@BindingAdapter("updateTrackingProgress")
+fun MaterialTextView.updateTrackingProgress(progress: Int) {
+    text = context.getString(R.string.progress_binding_format, progress)
+}
+
+@BindingAdapter("updateProgress")
+fun ProgressBar.updateProgress(progress: Int) {
+    this.progress = progress
 }

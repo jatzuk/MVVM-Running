@@ -8,7 +8,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.jatzuk.mvvmrunning.db.Run
-import dev.jatzuk.mvvmrunning.db.UserInfo
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_PAUSE_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_STOP_SERVICE
@@ -21,8 +20,7 @@ import java.util.*
 import kotlin.math.round
 
 class TrackingViewModel @ViewModelInject constructor(
-    private val mainRepository: MainRepository,
-    private val userInfo: UserInfo
+    private val mainRepository: MainRepository
 ) : ViewModel() {
 
     val isTracking = TrackingRepository.isTracking
@@ -30,6 +28,9 @@ class TrackingViewModel @ViewModelInject constructor(
     val currentTimeInMillis = TrackingRepository.timeRunInMillis
     val distanceInMeters = TrackingRepository.distanceInMeters
     val caloriesBurned = TrackingRepository.caloriesBurned
+
+    val targetType = TrackingRepository.targetType
+    val progress = TrackingRepository.progress
 
     private val runsSortedByDate = mainRepository.getAllRunsSortedByDate()
     private val runsSortedByTime = mainRepository.getAllRunsSortedByTimeInMillis()
@@ -93,14 +94,13 @@ class TrackingViewModel @ViewModelInject constructor(
         val avgSpeed = round(
             (distance / 1000f) / (currentTimeInMillis.value!! / 1000f / 60 / 60) * 10
         ) / 10f
-        val caloriesBurned = ((distance / 1000f) * userInfo.weight).toInt()
         val run = Run(
             bitmap,
             dateTimestamp,
             avgSpeed,
             distance,
             currentTimeInMillis.value!!,
-            caloriesBurned
+            caloriesBurned.value!!
         )
 
         viewModelScope.launch {

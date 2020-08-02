@@ -8,6 +8,8 @@
 
         <import type="android.content.Context" />
 
+        <import type="dev.jatzuk.mvvmrunning.other.TargetType" />
+
         <variable
             name="viewModel"
             type="dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel" />
@@ -41,20 +43,17 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvDistance"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
                 android:layout_marginTop="32dp"
                 android:text="@string/distance_binding_format"
                 android:textSize="30sp"
                 app:currentDistance="@{viewModel.distanceInMeters}"
-                app:layout_constraintEnd_toStartOf="@+id/tvCaloriesBurned"
-                app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTimer"
-                app:layout_constraintVertical_chainStyle="packed" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvDistanceInfo"
@@ -67,20 +66,44 @@
                 app:layout_constraintStart_toStartOf="@+id/tvDistance"
                 app:layout_constraintTop_toBottomOf="@+id/tvDistance" />
 
+            <ProgressBar
+                android:id="@+id/piProgress"
+                style="@style/CircularDeterminateProgressBar"
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_marginTop="8dp"
+                android:max="100"
+                android:progress="0"
+                android:visibility="@{viewModel.targetType != TargetType.NONE ? View.VISIBLE : View.GONE}"
+                app:layout_constraintEnd_toStartOf="@+id/tvCaloriesBurned"
+                app:layout_constraintStart_toEndOf="@+id/tvDistance"
+                app:layout_constraintTop_toBottomOf="@+id/tvTimer"
+                app:updateProgress="@{viewModel.progress}" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/progress_binding_format"
+                android:textSize="30sp"
+                android:visibility="@{viewModel.targetType != TargetType.NONE ? View.VISIBLE : View.GONE}"
+                app:layout_constraintBottom_toBottomOf="@+id/piProgress"
+                app:layout_constraintEnd_toEndOf="@+id/piProgress"
+                app:layout_constraintStart_toStartOf="@+id/piProgress"
+                app:layout_constraintTop_toTopOf="@+id/piProgress"
+                app:updateTrackingProgress="@{viewModel.progress}" />
+
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvCaloriesBurned"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
+                android:layout_marginEnd="32dp"
                 android:text="@string/calories_burned_binding_format"
                 android:textSize="30sp"
                 app:currentCaloriesBurned="@{viewModel.caloriesBurned}"
-                app:layout_constraintBottom_toTopOf="@+id/tvCaloriesBurnedInfo"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/tvDistance"
-                app:layout_constraintTop_toBottomOf="@+id/tvTimer"
-                app:layout_constraintVertical_chainStyle="packed" />
+                app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvCaloriesBurnedInfo"

@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.google.android.gms.maps.model.LatLng
 import dev.jatzuk.mvvmrunning.db.UserInfo
 import dev.jatzuk.mvvmrunning.other.Constants
+import dev.jatzuk.mvvmrunning.other.TargetType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -26,7 +27,7 @@ class TrackingRepository @Inject constructor(
     private var timeStarted = 0L
     private var lastSecondTimestamp = 0L
     var isCancelled = false
-    var lastCounted = 0
+    private var lastCounted = 0
 
     fun initStartingValues() {
         pathPoints.value = mutableListOf()
@@ -42,6 +43,9 @@ class TrackingRepository @Inject constructor(
         addEmptyPolyline()
         isTracking.value = true
         isCancelled = false
+
+        targetType.value = userInfo.targetType
+        progress.value = 0
     }
 
     fun startRun(firstRun: Boolean = false) {
@@ -52,6 +56,16 @@ class TrackingRepository @Inject constructor(
 
         CoroutineScope(Dispatchers.Main).launch {
             while (isTracking.value!!) {
+
+                val progressValue = when (userInfo.targetType) {
+                    TargetType.TIME -> timeRunInSeconds.value!!
+                    TargetType.DISTANCE -> distanceInMeters.value!!.toLong()
+                    TargetType.CALORIES -> caloriesBurned.value!!.toLong()
+                    else -> 0
+                }
+                val percentage = progressValue.toFloat() / userInfo.targetType.value * 100f
+                progress.postValue(percentage.toInt())
+
                 lapTime = System.currentTimeMillis() - timeStarted
                 timeRunInMillis.postValue(timeRun + lapTime)
 
@@ -103,6 +117,7 @@ class TrackingRepository @Inject constructor(
         timeRunInMillis.value = 0L // reset value for correct fragment observers income values
         distanceInMeters.value = 0
         caloriesBurned.value = 0
+        progress.value = 0
         pauseRun()
         initStartingValues()
     }
@@ -123,5 +138,7 @@ class TrackingRepository @Inject constructor(
         val timeRunInSeconds = MutableLiveData(0L)
         val distanceInMeters = MutableLiveData(0)
         val caloriesBurned = MutableLiveData(0)
+        val progress = MutableLiveData(0)
+        var targetType = MutableLiveData(TargetType.NONE)
     }
 }
