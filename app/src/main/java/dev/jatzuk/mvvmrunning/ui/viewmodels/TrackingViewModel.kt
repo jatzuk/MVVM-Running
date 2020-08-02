@@ -13,7 +13,6 @@ import dev.jatzuk.mvvmrunning.other.Constants.ACTION_PAUSE_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_STOP_SERVICE
 import dev.jatzuk.mvvmrunning.other.SortType
-import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.repositories.MainRepository
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
 import dev.jatzuk.mvvmrunning.services.TrackingService
@@ -90,19 +89,16 @@ class TrackingViewModel @ViewModelInject constructor(
 
     fun processRun(context: Context, bitmap: Bitmap) {
         val dateTimestamp = Calendar.getInstance().timeInMillis
-        var distanceInMeters = 0
-        for (polyline in pathPoints.value!!) {
-            distanceInMeters += TrackingUtility.calculatePolylineLength(polyline).toInt()
-        }
+        val distance = distanceInMeters.value!!
         val avgSpeed = round(
-            (distanceInMeters / 1000f) / (currentTimeInMillis.value!! / 1000f / 60 / 60) * 10
+            (distance / 1000f) / (currentTimeInMillis.value!! / 1000f / 60 / 60) * 10
         ) / 10f
-        val caloriesBurned = ((distanceInMeters / 1000f) * userInfo.weight).toInt()
+        val caloriesBurned = ((distance / 1000f) * userInfo.weight).toInt()
         val run = Run(
             bitmap,
             dateTimestamp,
             avgSpeed,
-            distanceInMeters,
+            distance,
             currentTimeInMillis.value!!,
             caloriesBurned
         )
