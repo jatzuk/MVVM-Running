@@ -5,6 +5,7 @@ import android.content.Context
 import android.location.Location
 import android.os.Build
 import androidx.fragment.app.Fragment
+import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.repositories.Polyline
 import pub.devrel.easypermissions.EasyPermissions
 import java.util.concurrent.TimeUnit
@@ -33,7 +34,7 @@ object TrackingUtility {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
             EasyPermissions.requestPermissions(
                 fragment,
-                "You need to accept location permissions to use this app.",
+                fragment.requireContext().getString(R.string.location_permissions_required_info),
                 Constants.REQUEST_CODE_LOCATION_PERMISSION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -41,7 +42,7 @@ object TrackingUtility {
         } else {
             EasyPermissions.requestPermissions(
                 fragment,
-                "You need to accept location permissions to use this app.",
+                fragment.requireContext().getString(R.string.location_permissions_required_info),
                 Constants.REQUEST_CODE_LOCATION_PERMISSION,
                 Manifest.permission.ACCESS_COARSE_LOCATION,
                 Manifest.permission.ACCESS_FINE_LOCATION,

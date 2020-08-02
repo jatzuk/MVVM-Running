@@ -50,4 +50,5 @@
     <string name="weight">Weight</string>
     <string name="run_saved_successfully">Run saved successfully</string>
     <string name="running">Running</string>
+    <string name="location_permissions_required_info">You need to accept location permissions to use this app.</string>
 </resources>
