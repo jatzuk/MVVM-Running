@@ -52,4 +52,6 @@
     <string name="running">Running</string>
     <string name="location_permissions_required_info">You need to accept location permissions to use this app.</string>
     <string name="no_music_app">No music app found on the device</string>
+    <string name="undo">Undo</string>
+    <string name="run_deleted">Run deleted</string>
 </resources>

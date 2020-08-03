@@ -8,10 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.adapters.RunAdapter
+import dev.jatzuk.mvvmrunning.adapters.SwipeToDeleteCallback
 import dev.jatzuk.mvvmrunning.databinding.FragmentRunsBinding
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel
@@ -27,6 +29,7 @@ class RunsFragment : Fragment(R.layout.fragment_runs), EasyPermissions.Permissio
     private val trackingViewModel: TrackingViewModel by viewModels()
 
     private lateinit var runAdapter: RunAdapter
+    private lateinit var swipeToDeleteCallback: SwipeToDeleteCallback
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -60,6 +63,8 @@ class RunsFragment : Fragment(R.layout.fragment_runs), EasyPermissions.Permissio
             runAdapter = RunAdapter()
             adapter = runAdapter
             layoutManager = LinearLayoutManager(requireContext())
+            swipeToDeleteCallback = SwipeToDeleteCallback(runAdapter, requireView())
+            ItemTouchHelper(swipeToDeleteCallback).attachToRecyclerView(this)
         }
     }
 
