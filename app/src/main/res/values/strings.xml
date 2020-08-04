@@ -54,4 +54,5 @@
     <string name="no_music_app">No music app found on the device</string>
     <string name="undo">Undo</string>
     <string name="run_deleted">Run deleted</string>
+    <string name="run_restored">Run has been restored successfully</string>
 </resources>

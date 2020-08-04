@@ -108,4 +108,16 @@ class TrackingViewModel @ViewModelInject constructor(
             mainRepository.insertRun(run)
         }
     }
+
+    fun deleteRun(run: Run) {
+        viewModelScope.launch {
+            mainRepository.deleteRun(run)
+        }
+    }
+
+    fun restoreDeletedRun(run: Run) {
+        viewModelScope.launch {
+            mainRepository.insertRun(run)
+        }
+    }
 }
