@@ -62,4 +62,5 @@
     <string name="target">TARGET</string>
     <string name="progress_binding_format">%d %%</string>
     <string name="your_target">Your target</string>
+    <string name="choose_target">Choose target</string>
 </resources>
