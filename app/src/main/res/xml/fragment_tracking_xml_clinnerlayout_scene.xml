@@ -5,13 +5,20 @@
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="2000"
+        motion:duration="1000"
         motion:motionInterpolator="linear">
-        <OnSwipe
-            motion:dragDirection="dragUp"
-            motion:touchAnchorId="@+id/piProgress"
-            motion:touchAnchorSide="top" />
+
         <KeyFrameSet>
+            <KeyPosition
+                motion:framePosition="10"
+                motion:motionTarget="@id/etTargetValue"
+                motion:percentY="-0.5" />
+
+            <KeyPosition
+                motion:framePosition="10"
+                motion:motionTarget="@id/tvTargetValueInfo"
+                motion:percentY="-0.5" />
+
             <KeyAttribute
                 android:rotation="45"
                 android:scaleX="2"
@@ -56,7 +63,6 @@
                 android:scaleY="0.1"
                 motion:framePosition="10"
                 motion:motionTarget="@id/tvTimer" />
-
         </KeyFrameSet>
     </Transition>
 
@@ -74,6 +80,7 @@
             android:id="@+id/spinner"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
+            android:layout_marginTop="16dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
             motion:layout_constraintTop_toBottomOf="@+id/tvChooseTarget" />
@@ -85,7 +92,8 @@
             android:layout_marginTop="8dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@+id/spinner" />
+            motion:layout_constraintTop_toBottomOf="@+id/spinner"
+            motion:visibilityMode="ignore" />
 
         <Constraint
             android:id="@+id/tvTargetValueInfo"
@@ -94,8 +102,8 @@
             android:layout_marginTop="8dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@+id/etTargetValue" />
-
+            motion:layout_constraintTop_toBottomOf="@+id/etTargetValue"
+            motion:visibilityMode="ignore" />
 
         <Constraint
             android:id="@+id/tvTimer"
@@ -131,7 +139,8 @@
             android:layout_marginTop="8dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="parent" />
+            motion:layout_constraintTop_toBottomOf="parent"
+            motion:visibilityMode="ignore" />
 
         <Constraint
             android:id="@+id/tvProgress"
@@ -140,7 +149,8 @@
             motion:layout_constraintBottom_toBottomOf="@+id/piProgress"
             motion:layout_constraintEnd_toEndOf="@+id/piProgress"
             motion:layout_constraintStart_toStartOf="@+id/piProgress"
-            motion:layout_constraintTop_toTopOf="@+id/piProgress" />
+            motion:layout_constraintTop_toTopOf="@+id/piProgress"
+            motion:visibilityMode="ignore" />
 
         <Constraint
             android:id="@+id/tvCaloriesBurned"
@@ -161,41 +171,23 @@
             motion:layout_constraintTop_toBottomOf="@+id/tvCaloriesBurned" />
 
         <Constraint
+            android:id="@+id/btnToggleRun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            motion:layout_constraintEnd_toStartOf="@+id/btnFinishRun"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/tvTargetValueInfo" />
+
+        <Constraint
             android:id="@+id/btnFinishRun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            motion:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="16dp"
             motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintHorizontal_bias="0.5"
             motion:layout_constraintStart_toEndOf="@+id/btnToggleRun"
-            motion:layout_constraintTop_toBottomOf="@+id/piProgress"
+            motion:layout_constraintTop_toBottomOf="@+id/tvTargetValueInfo"
             motion:visibilityMode="ignore" />
-
-        <Constraint
-            android:id="@+id/tvTargetValueInfo"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_editor_absoluteY="123dp" />
-        <Constraint
-            android:id="@+id/etTargetValue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            motion:layout_constraintBottom_toTopOf="@+id/tvTargetValueInfo"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintStart_toStartOf="parent" />
-        <Constraint
-            android:id="@+id/spinner"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_marginTop="120dp"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintHorizontal_bias="0.416"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@+id/tvChooseTarget" />
 
     </ConstraintSet>
 
@@ -224,20 +216,15 @@
             android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:visibility="gone"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@+id/spinner" />
+            motion:layout_constraintEnd_toStartOf="parent" />
 
         <Constraint
             android:id="@+id/tvTargetValueInfo"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_marginTop="8dp"
             android:visibility="gone"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@+id/etTargetValue" />
-
+            motion:layout_constraintStart_toEndOf="parent" />
 
         <Constraint
             android:id="@+id/tvTimer"
@@ -302,6 +289,17 @@
             motion:layout_constraintEnd_toEndOf="@+id/tvCaloriesBurned"
             motion:layout_constraintStart_toStartOf="@+id/tvCaloriesBurned"
             motion:layout_constraintTop_toBottomOf="@+id/tvCaloriesBurned" />
+
+        <Constraint
+            android:id="@+id/btnToggleRun"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toStartOf="@+id/btnFinishRun"
+            motion:layout_constraintHorizontal_bias="0.5"
+            motion:layout_constraintStart_toStartOf="parent"
+            motion:layout_constraintTop_toBottomOf="@+id/piProgress" />
 
         <Constraint
             android:id="@+id/btnFinishRun"

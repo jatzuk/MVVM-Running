@@ -39,7 +39,7 @@ data class UserInfo @Inject constructor(
             .putString(KEY_NAME, name)
             .putFloat(KEY_WEIGHT, weight)
             .putString(KEY_TARGET_TYPE, targetType.name)
-            .putLong(KEY_TARGET_VALUE, targetType.value)
+            .putFloat(KEY_TARGET_VALUE, targetType.value)
             .putBoolean(KEY_FIRST_TIME_TOGGLE, isFirstToggle)
             .apply()
     }
@@ -62,6 +62,6 @@ data class UserInfo @Inject constructor(
         }.also { loadTargetTypeValueFromSharedPreferences(it) }
 
     private fun loadTargetTypeValueFromSharedPreferences(targetType: TargetType) {
-        targetType.value = sharedPreferences.getLong(KEY_TARGET_VALUE, 0L)
+        targetType.value = sharedPreferences.getFloat(KEY_TARGET_VALUE, 0f)
     }
 }

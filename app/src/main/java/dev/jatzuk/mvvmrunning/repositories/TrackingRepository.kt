@@ -45,7 +45,6 @@ class TrackingRepository @Inject constructor(
         isCancelled = false
 
         targetType.value = userInfo.targetType
-        progress.value = 0
     }
 
     fun startRun(firstRun: Boolean = false) {
@@ -56,14 +55,14 @@ class TrackingRepository @Inject constructor(
 
         CoroutineScope(Dispatchers.Main).launch {
             while (isTracking.value!!) {
-
                 val progressValue = when (userInfo.targetType) {
-                    TargetType.TIME -> timeRunInSeconds.value!!
-                    TargetType.DISTANCE -> distanceInMeters.value!!.toLong()
-                    TargetType.CALORIES -> caloriesBurned.value!!.toLong()
-                    else -> 0
+                    TargetType.TIME -> timeRunInSeconds.value!! / 60f
+                    TargetType.DISTANCE -> distanceInMeters.value!!.toFloat()
+                    TargetType.CALORIES -> caloriesBurned.value!!.toFloat()
+                    else -> 0f
                 }
-                val percentage = progressValue.toFloat() / userInfo.targetType.value * 100f
+                val percentage = progressValue / userInfo.targetType.value * 100f
+                isTargetReached.postValue(percentage >= 100)
                 progress.postValue(percentage.toInt())
 
                 lapTime = System.currentTimeMillis() - timeStarted
@@ -118,6 +117,7 @@ class TrackingRepository @Inject constructor(
         distanceInMeters.value = 0
         caloriesBurned.value = 0
         progress.value = 0
+        isTargetReached.value = false
         pauseRun()
         initStartingValues()
     }
@@ -140,5 +140,6 @@ class TrackingRepository @Inject constructor(
         val caloriesBurned = MutableLiveData(0)
         val progress = MutableLiveData(0)
         var targetType = MutableLiveData(TargetType.NONE)
+        var isTargetReached = MutableLiveData(false)
     }
 }

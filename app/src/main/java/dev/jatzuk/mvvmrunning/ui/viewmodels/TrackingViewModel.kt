@@ -8,6 +8,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dev.jatzuk.mvvmrunning.db.Run
+import dev.jatzuk.mvvmrunning.db.UserInfo
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_PAUSE_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_STOP_SERVICE
@@ -20,7 +21,8 @@ import java.util.*
 import kotlin.math.round
 
 class TrackingViewModel @ViewModelInject constructor(
-    private val mainRepository: MainRepository
+    private val mainRepository: MainRepository,
+    val userInfo: UserInfo
 ) : ViewModel() {
 
     val isTracking = TrackingRepository.isTracking

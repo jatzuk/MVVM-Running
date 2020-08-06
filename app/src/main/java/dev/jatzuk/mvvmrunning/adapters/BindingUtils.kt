@@ -13,6 +13,7 @@ import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.db.Run
 import dev.jatzuk.mvvmrunning.other.SortType
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
+import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
 import dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -54,8 +55,13 @@ fun MaterialTextView.setCaloriesBurned(run: Run) {
 }
 
 @BindingAdapter("toggleRunText")
-fun MaterialButton.toggleRunText(isTracking: Boolean) {
-    text = if (isTracking) context.getString(R.string.pause) else context.getString(R.string.start)
+fun setStartButtonText(button: MaterialButton, isTracking: Boolean) {
+    // workaround to avoid updates from viewmodel (millis value) in binding
+    val millis = TrackingRepository.timeRunInMillis.value!!
+    button.text =
+        if (millis == 0L && !isTracking) button.context.getString(R.string.start)
+        else if (millis > 0L && !isTracking) button.context.getString(R.string.resume)
+        else button.context.getString(R.string.pause)
 }
 
 @BindingAdapter("setSelection")
