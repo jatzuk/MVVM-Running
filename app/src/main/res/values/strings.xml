@@ -17,7 +17,7 @@
         <item>min</item>
         <item>m</item>
         <item>kcal</item>
-        <item>just a curious run</item>
+        <item>normal run</item>
     </string-array>
     <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyBuhhawpoGghH-trqUuTp5MqrgwfZOGIyg</string>
     <string name="welcome_text">Welcome!\nPlease enter your name and weight.</string>
