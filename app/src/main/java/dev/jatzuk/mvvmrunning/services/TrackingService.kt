@@ -3,6 +3,7 @@ package dev.jatzuk.mvvmrunning.services
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.NotificationManager.IMPORTANCE_DEFAULT
 import android.app.NotificationManager.IMPORTANCE_LOW
 import android.app.PendingIntent
 import android.app.PendingIntent.FLAG_UPDATE_CURRENT
@@ -23,6 +24,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.maps.model.LatLng
 import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
+import dev.jatzuk.mvvmrunning.other.Constants.ACTION_FINISH_RUN
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_PAUSE_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_STOP_SERVICE
@@ -30,18 +32,27 @@ import dev.jatzuk.mvvmrunning.other.Constants.FASTEST_LOCATION_INTERVAL
 import dev.jatzuk.mvvmrunning.other.Constants.LOCATION_UPDATE_INTERVAL
 import dev.jatzuk.mvvmrunning.other.Constants.NOTIFICATION_CHANNEL_ID
 import dev.jatzuk.mvvmrunning.other.Constants.NOTIFICATION_CHANNEL_NAME
+import dev.jatzuk.mvvmrunning.other.Constants.NOTIFICATION_CHANNEL_TARGET_ID
+import dev.jatzuk.mvvmrunning.other.Constants.NOTIFICATION_CHANNEL_TARGET_NAME
 import dev.jatzuk.mvvmrunning.other.Constants.NOTIFICATION_ID
+import dev.jatzuk.mvvmrunning.other.Constants.NOTIFICATION_TARGET_ID
+import dev.jatzuk.mvvmrunning.other.Constants.REQUEST_CODE_ACTION_FINISH_RUN
+import dev.jatzuk.mvvmrunning.other.TargetType
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository.Companion.isTracking
+import dev.jatzuk.mvvmrunning.ui.MainActivity
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
+import javax.inject.Named
 
 @AndroidEntryPoint
 class TrackingService : LifecycleService() {
 
     @Inject
     lateinit var trackingRepository: TrackingRepository
+    private var isAlreadyNotifiedAboutTargetReached = false
 
     private val locationCallback = object : LocationCallback() {
         override fun onLocationResult(locationResult: LocationResult?) {
@@ -56,7 +67,12 @@ class TrackingService : LifecycleService() {
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     @Inject
+    @Named("baseNotificationBuilder")
     lateinit var baseNotificationBuilder: NotificationCompat.Builder
+
+    @Inject
+    @Named("targetReachedNotificationBuilder")
+    lateinit var targetReachedNotificationBuilder: NotificationCompat.Builder
 
     override fun onCreate() {
         super.onCreate()
@@ -65,6 +81,10 @@ class TrackingService : LifecycleService() {
         isTracking.observe(this, Observer {
             updateLocationTracking(it)
             updateNotificationTrackingState(it)
+        })
+
+        TrackingRepository.isTargetReached.observe(this, Observer {
+            if (it && !isAlreadyNotifiedAboutTargetReached) notifyTargetReached()
         })
     }
 
@@ -162,7 +182,13 @@ class TrackingService : LifecycleService() {
             if (!trackingRepository.isCancelled) {
                 val time = TrackingUtility.getFormattedStopWatchTime(it * 1000L)
                 val info = "${TrackingRepository.distanceInMeters.value} m | " +
-                        "${TrackingRepository.caloriesBurned.value} kcal"
+                        "${TrackingRepository.caloriesBurned.value} kcal" +
+                        if (TrackingRepository.targetType.value!! != TargetType.NONE) {
+                            " | ${TrackingRepository.progress.value!!} % - ${getString(R.string.target).toLowerCase(
+                                Locale.getDefault()
+                            )}"
+                        } else ""
+
                 baseNotificationBuilder
                     .setContentTitle(time)
                     .setContentText(info)
@@ -178,13 +204,60 @@ class TrackingService : LifecycleService() {
             NOTIFICATION_CHANNEL_NAME,
             IMPORTANCE_LOW
         )
-
         notificationManager.createNotificationChannel(channel)
+    }
+
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createTargetReachedNotificationChannel(notificationManager: NotificationManager) {
+        val channel = NotificationChannel(
+            NOTIFICATION_CHANNEL_TARGET_ID,
+            NOTIFICATION_CHANNEL_TARGET_NAME,
+            IMPORTANCE_DEFAULT
+        )
+        notificationManager.createNotificationChannel(channel)
+    }
+
+    @SuppressLint("RestrictedApi")
+    private fun notifyTargetReached() {
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            createTargetReachedNotificationChannel(notificationManager)
+        }
+
+        val pendingIntent = PendingIntent.getActivity(
+            this,
+            REQUEST_CODE_ACTION_FINISH_RUN,
+            Intent(this, MainActivity::class.java).apply {
+                action = ACTION_FINISH_RUN
+            },
+            FLAG_UPDATE_CURRENT
+        )
+
+        targetReachedNotificationBuilder
+            .addAction(
+                R.drawable.ic_pause_black_24dp,
+                getString(R.string.finish),
+                pendingIntent
+            )
+
+        if (!trackingRepository.isCancelled) {
+            notificationManager.notify(
+                NOTIFICATION_TARGET_ID,
+                targetReachedNotificationBuilder.build()
+            )
+            isAlreadyNotifiedAboutTargetReached = true
+        }
     }
 
     private fun killService() {
         trackingRepository.cancelRun()
         stopForeground(true)
         stopSelf()
+        isAlreadyNotifiedAboutTargetReached = false
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        notificationManager.cancelAll()
     }
 }

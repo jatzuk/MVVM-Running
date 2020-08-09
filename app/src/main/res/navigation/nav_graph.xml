@@ -33,6 +33,10 @@
         android:id="@+id/trackingFragment"
         android:name="dev.jatzuk.mvvmrunning.ui.fragments.TrackingFragment"
         android:label="TrackingFragment">
+        <argument
+            android:name="isFinishActionFired"
+            android:defaultValue="false"
+            app:argType="boolean" />
         <action
             android:id="@+id/action_trackingFragment_to_runsFragment"
             app:destination="@id/runsFragment" />

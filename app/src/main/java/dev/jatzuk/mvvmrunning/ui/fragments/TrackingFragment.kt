@@ -4,10 +4,13 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.*
+import android.widget.AdapterView
+import androidx.constraintlayout.motion.widget.MotionLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.MapView
@@ -23,10 +26,12 @@ import dev.jatzuk.mvvmrunning.other.Constants.POLYLINE_COLOR
 import dev.jatzuk.mvvmrunning.other.Constants.POLYLINE_WIDTH
 import dev.jatzuk.mvvmrunning.other.MapLifecycleObserver
 import dev.jatzuk.mvvmrunning.other.MusicApps
+import dev.jatzuk.mvvmrunning.other.TargetType
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository.Companion.pathPoints
 import dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel
 import timber.log.Timber
+import java.util.*
 
 @AndroidEntryPoint
 class TrackingFragment : Fragment(R.layout.fragment_tracking) {
@@ -41,6 +46,9 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
     private lateinit var mapLifecycleObserver: MapLifecycleObserver
 
     private var menu: Menu? = null
+    private lateinit var motionLayout: MotionLayout
+
+    private val args: TrackingFragmentArgs by navArgs()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -50,21 +58,51 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
         _binding = FragmentTrackingBinding.inflate(inflater, container, false)
         mapView = binding.mapView
 
+        motionLayout = binding.root.findViewById(R.id.clInnerLayout)!!
+
         setHasOptionsMenu(true)
 
         mapLifecycleObserver = MapLifecycleObserver(mapView, lifecycle)
 
-        binding.lifecycleOwner = this
-        binding.viewModel = trackingViewModel
-
+        loadPreviouslySelectedRunTarget()
         subscribeToObservers()
 
-        binding.btnFinishRun.setOnClickListener {
-            finishRun()
-        }
+        binding.apply {
+            lifecycleOwner = this@TrackingFragment
+            viewModel = trackingViewModel
 
-        binding.ivLaunchMusicPlayer.setOnClickListener {
-            startMusicPlayer()
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+
+                override fun onItemSelected(
+                    parent: AdapterView<*>?,
+                    view: View?,
+                    position: Int,
+                    id: Long
+                ) {
+                    apply {
+                        tvTargetValueInfo.text =
+                            resources.getStringArray(R.array.target_types_measurements)[position]
+                        etTargetValue.visibility = if (position == 3) View.GONE else View.VISIBLE
+                    }
+                }
+            }
+
+            btnToggleRun.setOnClickListener {
+                if (trackingViewModel.currentTimeInMillis.value!! == 0L) {
+                    val success = setRunTarget()
+                    if (success) {
+                        trackingViewModel.sendCommandToService(requireContext())
+                        motionLayout.transitionToEnd()
+                    }
+                } else {
+                    trackingViewModel.sendCommandToService(requireContext())
+                }
+            }
+
+            btnFinishRun.setOnClickListener { finishRun() }
+
+            ivLaunchMusicPlayer.setOnClickListener { startMusicPlayer() }
         }
 
         return binding.root
@@ -87,7 +125,17 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
             mapView.getMapAsync {
                 map = it
                 addAllPolylines()
+                if (args.isFinishActionFired) {
+                    finishRun()
+                }
             }
+        }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        if (trackingViewModel.isTracking.value!! || trackingViewModel.currentTimeInMillis.value!! > 0L) {
+            motionLayout.transitionToEnd()
         }
     }
 
@@ -112,7 +160,10 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
 
     private fun showCancelTrackingDialog() {
         CancelTrackingDialog().apply {
-            setPositiveButtonListener { trackingViewModel.setCancelCommand(requireContext()) }
+            setPositiveButtonListener {
+                trackingViewModel.setCancelCommand(requireContext())
+                motionLayout.transitionToStart()
+            }
         }.show(parentFragmentManager, CANCEL_TRACKING_DIALOG_TAG)
     }
 
@@ -229,6 +280,36 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
         } catch (e: PackageManager.NameNotFoundException) {
             false
         }
+
+    private fun setRunTarget(): Boolean {
+        val typeString = binding.spinner.selectedItem.toString()
+        val targetType = TargetType.valueOf(typeString.toUpperCase(Locale.getDefault()))
+        val targetValue = binding.etTargetValue.text?.toString()?.toFloat()!!
+
+        if (targetValue == 0f && targetType != TargetType.NONE) {
+            binding.etTargetValue.error = requireContext().getString(
+                R.string.error_must_be_provided,
+                requireContext().getString(R.string.target_value)
+            )
+            return false
+        } else {
+            if (targetType != TargetType.NONE) targetType.value = targetValue
+        }
+
+        trackingViewModel.userInfo.applyChanges(targetType = targetType)
+        return true
+    }
+
+    private fun loadPreviouslySelectedRunTarget() {
+        val targetType = trackingViewModel.userInfo.targetType
+        binding.apply {
+            spinner.setSelection(targetType.ordinal)
+            etTargetValue.setText(targetType.value.toString())
+            tvTargetValueInfo.text =
+                resources.getStringArray(R.array.target_types_measurements)[targetType.ordinal]
+
+        }
+    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)

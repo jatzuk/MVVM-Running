@@ -6,11 +6,13 @@ object Constants {
 
     const val RUNNING_DATABASE_NAME = "running_db"
     const val REQUEST_CODE_LOCATION_PERMISSION = 0
+    const val REQUEST_CODE_ACTION_FINISH_RUN = 3
 
     const val ACTION_START_OR_RESUME_SERVICE = "ACTION_START_OR_RESUME_SERVICE"
     const val ACTION_PAUSE_SERVICE = "ACTION_PAUSE_SERVICE"
     const val ACTION_STOP_SERVICE = "ACTION_STOP_SERVICE"
     const val ACTION_SHOW_TRACKING_FRAGMENT = "ACTION_SHOW_TRACKING_FRAGMENT"
+    const val ACTION_FINISH_RUN = "ACTION_FINISH_RUN"
 
     const val TIMER_UPDATE_INTERVAL = 50L
 
@@ -25,10 +27,16 @@ object Constants {
     const val NOTIFICATION_CHANNEL_NAME = "Tracking"
     const val NOTIFICATION_ID = 1
 
+    const val NOTIFICATION_CHANNEL_TARGET_ID = "target_reached_channel"
+    const val NOTIFICATION_CHANNEL_TARGET_NAME = "Target reached"
+    const val NOTIFICATION_TARGET_ID = 2
+
     const val SHARED_PREFERENCES_NAME = "dev.jatzuk.mvvmrunning.shared_preferences"
     const val KEY_FIRST_TIME_TOGGLE = "KEY_FIRST_TIME_TOGGLE"
     const val KEY_NAME = "KEY_NAME"
     const val KEY_WEIGHT = "KEY_WEIGHT"
+    const val KEY_TARGET_TYPE = "KEY_TARGET_TYPE"
+    const val KEY_TARGET_VALUE = "KEY_TARGET_VALUE"
 
     const val CANCEL_TRACKING_DIALOG_TAG = "CANCEL_TRACKING_DIALOG_TAG"
 }

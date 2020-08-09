@@ -74,7 +74,7 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
             return false
         }
 
-        userInfo.applyChanges(name, weight.toFloat(), false)
+        userInfo.applyChanges(name, weight.toFloat(), isFirstToggle = false)
 
         requireActivity().findViewById<MaterialTextView>(R.id.tvToolbarTitle).text =
             context?.getString(R.string.let_s_go_username, userInfo.name)

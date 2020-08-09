@@ -3,6 +3,7 @@ package dev.jatzuk.mvvmrunning.adapters
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ImageView
+import android.widget.ProgressBar
 import android.widget.Spinner
 import androidx.databinding.BindingAdapter
 import com.bumptech.glide.Glide
@@ -12,6 +13,7 @@ import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.db.Run
 import dev.jatzuk.mvvmrunning.other.SortType
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
+import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
 import dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel
 import java.text.SimpleDateFormat
 import java.util.*
@@ -53,8 +55,13 @@ fun MaterialTextView.setCaloriesBurned(run: Run) {
 }
 
 @BindingAdapter("toggleRunText")
-fun MaterialButton.toggleRunText(isTracking: Boolean) {
-    text = if (isTracking) context.getString(R.string.pause) else context.getString(R.string.start)
+fun setStartButtonText(button: MaterialButton, isTracking: Boolean) {
+    // workaround to avoid updates from viewmodel (millis value) in binding
+    val millis = TrackingRepository.timeRunInMillis.value!!
+    button.text =
+        if (millis == 0L && !isTracking) button.context.getString(R.string.start)
+        else if (millis > 0L && !isTracking) button.context.getString(R.string.resume)
+        else button.context.getString(R.string.pause)
 }
 
 @BindingAdapter("setSelection")
@@ -105,4 +112,14 @@ fun MaterialTextView.currentDistance(distance: Long) {
 @BindingAdapter("currentCaloriesBurned")
 fun MaterialTextView.currentCaloriesBurned(calories: Long) {
     text = context.getString(R.string.calories_burned_binding_format, calories)
+}
+
+@BindingAdapter("updateTrackingProgress")
+fun MaterialTextView.updateTrackingProgress(progress: Int) {
+    text = context.getString(R.string.progress_binding_format, progress)
+}
+
+@BindingAdapter("updateProgress")
+fun ProgressBar.updateProgress(progress: Int) {
+    this.progress = progress
 }

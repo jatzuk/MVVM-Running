@@ -11,7 +11,9 @@ import dagger.hilt.android.AndroidEntryPoint
 import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.databinding.ActivityMainBinding
 import dev.jatzuk.mvvmrunning.db.UserInfo
+import dev.jatzuk.mvvmrunning.other.Constants.ACTION_FINISH_RUN
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_SHOW_TRACKING_FRAGMENT
+import dev.jatzuk.mvvmrunning.ui.fragments.TrackingFragmentDirections
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -55,8 +57,14 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun navigateToTrackingFragmentIfNeeded(intent: Intent?) {
-        if (intent?.action == ACTION_SHOW_TRACKING_FRAGMENT) {
-            navController.navigate(R.id.action_global_trackingFragment)
+        when (intent?.action) {
+            ACTION_SHOW_TRACKING_FRAGMENT -> {
+                navController.navigate(R.id.action_global_trackingFragment)
+            }
+            ACTION_FINISH_RUN -> {
+                val action = TrackingFragmentDirections.actionGlobalTrackingFragment(true)
+                navController.navigate(action)
+            }
         }
     }
 }
