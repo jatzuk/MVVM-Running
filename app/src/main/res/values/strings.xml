@@ -27,7 +27,7 @@
     <string name="continue_label">Continue</string>
     <string name="sort_by">Sort by:</string>
     <string name="time_placeholder">00:00:00:00</string>
-    <string name="finish_run">Finish Run</string>
+    <string name="finish">Finish</string>
     <string name="let_s_go_username">Let\'s go, %s!</string>
     <string name="running_app">Running App</string>
     <string name="start">Start</string>

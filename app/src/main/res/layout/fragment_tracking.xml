@@ -6,8 +6,6 @@
 
         <import type="android.view.View" />
 
-        <import type="android.content.Context" />
-
         <import type="dev.jatzuk.mvvmrunning.other.TargetType" />
 
         <variable
@@ -25,7 +23,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/md_blue_800"
-            app:layoutDescription="@xml/fragment_tracking_xml_clinnerlayout_scene"
+            app:layoutDescription="@xml/fragment_tracking_xml_clinnerlayout_scene_portrait"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
@@ -127,7 +125,7 @@
                 android:id="@+id/btnFinishRun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/finish_run"
+                android:text="@string/finish"
                 android:visibility="@{viewModel.currentTimeInMillis > 0L ? View.VISIBLE : View.GONE}" />
 
             <com.google.android.material.imageview.ShapeableImageView

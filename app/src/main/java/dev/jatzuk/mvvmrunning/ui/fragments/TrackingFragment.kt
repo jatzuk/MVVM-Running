@@ -71,7 +71,7 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
             lifecycleOwner = this@TrackingFragment
             viewModel = trackingViewModel
 
-            spinner?.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
 
                 override fun onItemSelected(
@@ -81,9 +81,9 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
                     id: Long
                 ) {
                     apply {
-                        tvTargetValueInfo!!.text =
+                        tvTargetValueInfo.text =
                             resources.getStringArray(R.array.target_types_measurements)[position]
-                        etTargetValue!!.visibility = if (position == 3) View.GONE else View.VISIBLE
+                        etTargetValue.visibility = if (position == 3) View.GONE else View.VISIBLE
                     }
                 }
             }
@@ -282,12 +282,12 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
         }
 
     private fun setRunTarget(): Boolean {
-        val typeString = binding.spinner?.selectedItem.toString()
+        val typeString = binding.spinner.selectedItem.toString()
         val targetType = TargetType.valueOf(typeString.toUpperCase(Locale.getDefault()))
-        val targetValue = binding.etTargetValue?.text?.toString()?.toFloat()!!
+        val targetValue = binding.etTargetValue.text?.toString()?.toFloat()!!
 
         if (targetValue == 0f && targetType != TargetType.NONE) {
-            binding.etTargetValue?.error = requireContext().getString(
+            binding.etTargetValue.error = requireContext().getString(
                 R.string.error_must_be_provided,
                 requireContext().getString(R.string.target_value)
             )
@@ -303,9 +303,9 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
     private fun loadPreviouslySelectedRunTarget() {
         val targetType = trackingViewModel.userInfo.targetType
         binding.apply {
-            spinner!!.setSelection(targetType.ordinal)
-            etTargetValue!!.setText(targetType.value.toString())
-            tvTargetValueInfo!!.text =
+            spinner.setSelection(targetType.ordinal)
+            etTargetValue.setText(targetType.value.toString())
+            tvTargetValueInfo.text =
                 resources.getStringArray(R.array.target_types_measurements)[targetType.ordinal]
 
         }

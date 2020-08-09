@@ -238,7 +238,7 @@ class TrackingService : LifecycleService() {
         targetReachedNotificationBuilder
             .addAction(
                 R.drawable.ic_pause_black_24dp,
-                getString(R.string.finish_run),
+                getString(R.string.finish),
                 pendingIntent
             )
 

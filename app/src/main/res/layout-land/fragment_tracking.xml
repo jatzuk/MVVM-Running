@@ -6,7 +6,7 @@
 
         <import type="android.view.View" />
 
-        <import type="android.content.Context" />
+        <import type="dev.jatzuk.mvvmrunning.other.TargetType" />
 
         <variable
             name="viewModel"
@@ -18,11 +18,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <androidx.constraintlayout.motion.widget.MotionLayout
             android:id="@+id/clInnerLayout"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:background="@color/md_blue_800"
+            app:layoutDescription="@xml/fragment_tracking_xml_clinnerlayout_scene_landscape"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/mapView"
             app:layout_constraintHorizontal_bias="0.5"
@@ -30,17 +31,39 @@
             app:layout_constraintTop_toTopOf="parent">
 
             <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvChooseTarget"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/choose_target"
+                android:textSize="16sp" />
+
+            <Spinner
+                android:id="@+id/spinner"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:entries="@array/target_types" />
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etTargetValue"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:inputType="numberDecimal"
+                android:text="@string/zero"
+                android:textSize="32sp" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvTargetValueInfo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="24sp" />
+
+            <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvTimer"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="@string/time_placeholder"
-                android:textSize="50sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
-
+                android:textSize="40sp" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvDistance"
@@ -48,12 +71,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="@string/distance_binding_format"
-                android:textSize="40sp"
-                app:currentDistance="@{viewModel.distanceInMeters}"
-                app:layout_constraintEnd_toStartOf="@+id/tvCaloriesBurned"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
+                android:textSize="30sp"
+                app:currentDistance="@{viewModel.distanceInMeters}" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvDistanceInfo"
@@ -61,10 +80,26 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/distance_holder"
-                android:textSize="30sp"
-                app:layout_constraintEnd_toEndOf="@+id/tvDistance"
-                app:layout_constraintStart_toStartOf="@+id/tvDistance"
-                app:layout_constraintTop_toBottomOf="@+id/tvDistance" />
+                android:textSize="24sp" />
+
+            <ProgressBar
+                android:id="@+id/piProgress"
+                style="@style/CircularDeterminateProgressBar"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:max="100"
+                android:progress="0"
+                android:visibility="@{viewModel.targetType != TargetType.NONE ? View.VISIBLE : View.GONE}"
+                app:updateProgress="@{viewModel.progress}" />
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tvProgress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/progress_binding_format"
+                android:textSize="24sp"
+                android:visibility="@{viewModel.targetType != TargetType.NONE ? View.VISIBLE : View.GONE}"
+                app:updateTrackingProgress="@{viewModel.progress}" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@+id/tvCaloriesBurned"
@@ -72,12 +107,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="32dp"
                 android:text="@string/calories_burned_binding_format"
-                android:textSize="40sp"
-                app:currentCaloriesBurned="@{viewModel.caloriesBurned}"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/tvDistance"
-                app:layout_constraintTop_toBottomOf="@+id/tvTimer" />
+                android:textSize="30sp"
+                app:currentCaloriesBurned="@{viewModel.caloriesBurned}" />
 
             <com.google.android.material.textview.MaterialTextView
                 android:id="@id/tvCaloriesBurnedInfo"
@@ -85,35 +116,21 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/calories_holder"
-                android:textSize="30sp"
-                app:layout_constraintEnd_toEndOf="@+id/tvCaloriesBurned"
-                app:layout_constraintStart_toStartOf="@+id/tvCaloriesBurned"
-                app:layout_constraintTop_toBottomOf="@+id/tvCaloriesBurned" />
+                android:textSize="24sp" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnToggleRun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:onClick="@{() -> viewModel.sendCommandToService(context)}"
                 android:text="@string/start"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/btnFinishRun"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tvDistanceInfo"
                 app:toggleRunText="@{viewModel.isTracking}" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnFinishRun"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/finish_run"
-                android:visibility="@{viewModel.currentTimeInMillis > 0L ? View.VISIBLE : View.GONE}"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/btnToggleRun"
-                app:layout_constraintTop_toBottomOf="@+id/tvCaloriesBurnedInfo" />
+                android:text="@string/finish"
+                android:visibility="@{viewModel.currentTimeInMillis > 0L ? View.VISIBLE : View.GONE}" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/ivLaunchMusicPlayer"
@@ -127,7 +144,7 @@
                 app:layout_constraintStart_toEndOf="@+id/tvTimer"
                 app:layout_constraintTop_toTopOf="parent" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.motion.widget.MotionLayout>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvLetsGo"

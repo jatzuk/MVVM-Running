@@ -5,8 +5,7 @@
     <Transition
         motion:constraintSetEnd="@+id/end"
         motion:constraintSetStart="@id/start"
-        motion:duration="1000"
-        motion:motionInterpolator="linear">
+        motion:duration="1000">
 
         <KeyFrameSet>
             <KeyPosition
@@ -64,6 +63,7 @@
                 motion:framePosition="10"
                 motion:motionTarget="@id/tvTimer" />
         </KeyFrameSet>
+
     </Transition>
 
     <ConstraintSet android:id="@+id/start">
@@ -109,7 +109,7 @@
             android:id="@+id/tvTimer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="16dp"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintHorizontal_bias="0.5"
             motion:layout_constraintStart_toStartOf="parent"
@@ -137,9 +137,9 @@
             android:layout_width="150dp"
             android:layout_height="150dp"
             android:layout_marginTop="8dp"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="parent"
+            motion:layout_constraintEnd_toStartOf="@+id/tvCaloriesBurned"
+            motion:layout_constraintStart_toEndOf="@+id/tvDistance"
+            motion:layout_constraintTop_toBottomOf="@+id/tvCaloriesBurned"
             motion:visibilityMode="ignore" />
 
         <Constraint
@@ -188,7 +188,6 @@
             motion:layout_constraintStart_toEndOf="@+id/btnToggleRun"
             motion:layout_constraintTop_toBottomOf="@+id/tvTargetValueInfo"
             motion:visibilityMode="ignore" />
-
     </ConstraintSet>
 
     <ConstraintSet android:id="@+id/end">
@@ -238,7 +237,7 @@
 
         <Constraint
             android:id="@+id/tvDistance"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="32dp"
             android:layout_marginTop="32dp"
@@ -250,7 +249,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            motion:layout_constraintEnd_toEndOf="@+id/tvDistance"
             motion:layout_constraintStart_toStartOf="@+id/tvDistance"
             motion:layout_constraintTop_toBottomOf="@+id/tvDistance" />
 
@@ -258,10 +256,11 @@
             android:id="@+id/piProgress"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:layout_marginTop="8dp"
-            motion:layout_constraintEnd_toEndOf="parent"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@+id/tvTimer" />
+            android:layout_marginBottom="16dp"
+            motion:layout_constraintBottom_toBottomOf="parent"
+            motion:layout_constraintEnd_toStartOf="@+id/tvCaloriesBurnedInfo"
+            motion:layout_constraintStart_toEndOf="@+id/tvDistanceInfo"
+            motion:layout_constraintTop_toBottomOf="@+id/tvDistanceInfo" />
 
         <Constraint
             android:id="@+id/tvProgress"
@@ -274,7 +273,7 @@
 
         <Constraint
             android:id="@+id/tvCaloriesBurned"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="32dp"
@@ -287,30 +286,27 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             motion:layout_constraintEnd_toEndOf="@+id/tvCaloriesBurned"
-            motion:layout_constraintStart_toStartOf="@+id/tvCaloriesBurned"
             motion:layout_constraintTop_toBottomOf="@+id/tvCaloriesBurned" />
 
         <Constraint
             android:id="@+id/btnToggleRun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:layout_marginBottom="16dp"
             motion:layout_constraintBottom_toBottomOf="parent"
-            motion:layout_constraintEnd_toStartOf="@+id/btnFinishRun"
             motion:layout_constraintHorizontal_bias="0.5"
-            motion:layout_constraintStart_toStartOf="parent"
-            motion:layout_constraintTop_toBottomOf="@+id/piProgress" />
+            motion:layout_constraintStart_toStartOf="parent" />
 
         <Constraint
             android:id="@+id/btnFinishRun"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
             android:layout_marginBottom="16dp"
             motion:layout_constraintBottom_toBottomOf="parent"
             motion:layout_constraintEnd_toEndOf="parent"
             motion:layout_constraintHorizontal_bias="0.5"
-            motion:layout_constraintStart_toEndOf="@+id/btnToggleRun"
-            motion:layout_constraintTop_toBottomOf="@+id/piProgress"
             motion:visibilityMode="ignore" />
 
     </ConstraintSet>
