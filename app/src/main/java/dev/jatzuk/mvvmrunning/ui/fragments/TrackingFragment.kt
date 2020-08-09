@@ -256,7 +256,9 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
 
     private fun startMusicPlayer() {
         val packageManager = requireActivity().packageManager
-        val intent = Intent()
+        val intent = Intent().apply {
+            flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        }
 
         for (app in MusicApps.values()) {
             if (isPackageInstalled(app.packagePath)) {
