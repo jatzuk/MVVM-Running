@@ -71,4 +71,7 @@
     <string name="choose_target">Choose target</string>
     <string name="zero">0</string>
     <string name="target_reached">You reached the target!</string>
+    <string name="run_deleted">Run data has been deleted</string>
+    <string name="undo">Undo</string>
+    <string name="run_restored">Deleted run has been restored</string>
 </resources>
