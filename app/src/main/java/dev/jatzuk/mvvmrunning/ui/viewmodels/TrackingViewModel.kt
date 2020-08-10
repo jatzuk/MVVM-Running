@@ -13,6 +13,7 @@ import dev.jatzuk.mvvmrunning.other.Constants.ACTION_PAUSE_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import dev.jatzuk.mvvmrunning.other.Constants.ACTION_STOP_SERVICE
 import dev.jatzuk.mvvmrunning.other.SortType
+import dev.jatzuk.mvvmrunning.other.Sortable
 import dev.jatzuk.mvvmrunning.repositories.MainRepository
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
 import dev.jatzuk.mvvmrunning.services.TrackingService
@@ -23,7 +24,7 @@ import kotlin.math.round
 class TrackingViewModel @ViewModelInject constructor(
     private val mainRepository: MainRepository,
     val userInfo: UserInfo
-) : ViewModel() {
+) : ViewModel(), Sortable {
 
     val isTracking = TrackingRepository.isTracking
     val pathPoints = TrackingRepository.pathPoints
@@ -34,44 +35,17 @@ class TrackingViewModel @ViewModelInject constructor(
     val targetType = TrackingRepository.targetType
     val progress = TrackingRepository.progress
 
-    private val runsSortedByDate = mainRepository.getAllRunsSortedByDate()
-    private val runsSortedByTime = mainRepository.getAllRunsSortedByTimeInMillis()
-    private val runsSortedByAvgSpeed = mainRepository.getAllRunsSortedByAvgSpeed()
-    private val runsSortedByDistance = mainRepository.getAllRunsSortedByDistance()
-    private val runsSortedByCaloriesBurned = mainRepository.getAllRunsSortedByCaloriesBurned()
-    val runs = MediatorLiveData<List<Run>>()
-    var sortType = SortType.DATE
-        private set
+    override val runsSortedByDate = mainRepository.getAllRunsSortedByDate()
+    override val runsSortedByTime = mainRepository.getAllRunsSortedByTimeInMillis()
+    override val runsSortedByAvgSpeed = mainRepository.getAllRunsSortedByAvgSpeed()
+    override val runsSortedByDistance = mainRepository.getAllRunsSortedByDistance()
+    override val runsSortedByCaloriesBurned = mainRepository.getAllRunsSortedByCaloriesBurned()
+    override val runs = MediatorLiveData<List<Run>>()
+    override var sortType = SortType.DATE
 
     init {
-        runs.addSource(runsSortedByDate) {
-            if (sortType == SortType.DATE) it?.let { runs.value = it }
-        }
-
-        runs.addSource(runsSortedByTime) {
-            if (sortType == SortType.RUNNING_TIME) it?.let { runs.value = it }
-        }
-
-        runs.addSource(runsSortedByAvgSpeed) {
-            if (sortType == SortType.AVG_SPEED) it?.let { runs.value = it }
-        }
-
-        runs.addSource(runsSortedByDistance) {
-            if (sortType == SortType.DISTANCE) it?.let { runs.value = it }
-        }
-
-        runs.addSource(runsSortedByCaloriesBurned) {
-            if (sortType == SortType.CALORIES_BURNED) it?.let { runs.value = it }
-        }
+        fillSources()
     }
-
-    fun sortRuns(sortType: SortType) = when (sortType) {
-        SortType.DATE -> runsSortedByDate.value?.let { runs.value = it }
-        SortType.RUNNING_TIME -> runsSortedByTime.value?.let { runs.value = it }
-        SortType.AVG_SPEED -> runsSortedByAvgSpeed.value?.let { runs.value = it }
-        SortType.DISTANCE -> runsSortedByDistance.value?.let { runs.value = it }
-        SortType.CALORIES_BURNED -> runsSortedByCaloriesBurned.value?.let { runs.value = it }
-    }.also { this.sortType = sortType }
 
     fun sendCommandToService(context: Context) {
         val action =

@@ -12,9 +12,9 @@ import com.google.android.material.textview.MaterialTextView
 import dev.jatzuk.mvvmrunning.R
 import dev.jatzuk.mvvmrunning.db.Run
 import dev.jatzuk.mvvmrunning.other.SortType
+import dev.jatzuk.mvvmrunning.other.Sortable
 import dev.jatzuk.mvvmrunning.other.TrackingUtility
 import dev.jatzuk.mvvmrunning.repositories.TrackingRepository
-import dev.jatzuk.mvvmrunning.ui.viewmodels.TrackingViewModel
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.roundToInt
@@ -65,8 +65,8 @@ fun setStartButtonText(button: MaterialButton, isTracking: Boolean) {
 }
 
 @BindingAdapter("setSelection")
-fun Spinner.setSelection(trackingViewModel: TrackingViewModel) {
-    setSelection(trackingViewModel.sortType.ordinal)
+fun Spinner.setSelection(viewModel: Sortable) {
+    setSelection(viewModel.sortType.ordinal)
     onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
         override fun onNothingSelected(parent: AdapterView<*>?) {}
 
@@ -76,7 +76,7 @@ fun Spinner.setSelection(trackingViewModel: TrackingViewModel) {
             position: Int,
             id: Long
         ) {
-            trackingViewModel.sortRuns(SortType.values()[position])
+            viewModel.sortRuns(SortType.values()[position])
         }
     }
 }

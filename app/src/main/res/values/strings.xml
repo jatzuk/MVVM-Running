@@ -74,4 +74,5 @@
     <string name="run_deleted">Run data has been deleted</string>
     <string name="undo">Undo</string>
     <string name="run_restored">Deleted run has been restored</string>
+    <string name="your_records">Your records</string>
 </resources>

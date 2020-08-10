@@ -14,6 +14,17 @@
         android:layout_height="match_parent"
         android:padding="16dp">
 
+        <Spinner
+            android:id="@+id/spFilter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:entries="@array/filter_options"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:setSelection="@{statisticsViewModel}" />
+
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvTotalDistanceInfo"
             android:layout_width="wrap_content"
@@ -117,6 +128,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvAverageSpeedInfo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
