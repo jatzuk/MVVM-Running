@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">MVVM Running</string>
     <string-array name="filter_options">
         <item>Date</item>
@@ -36,7 +36,7 @@
     <string name="distance_binding_format">%.2f km</string>
     <string name="distance_binding_format_meters">%d m</string>
     <string name="avg_speed_binding_format">%.2f km/h</string>
-    <string name="calories_burned_binding_format">%d kcal</string>
+    <string name="calories_burned_binding_format" tools:ignore="PluralsCandidate">%d kcal</string>
     <string name="avgspeed_holder">AVG SPEED</string>
     <string name="calories_holder">CALORIES</string>
     <string name="distance_holder">DISTANCE</string>
@@ -44,7 +44,6 @@
     <string name="date_holder">DATE</string>
     <string name="track_snapshot">Track snapshot</string>
     <string name="changes_saved">Saved the changes</string>
-    <string name="please_fill_all_fields">Please enter all the fields</string>
     <string name="apply_changes">Apply Changes</string>
     <string name="your_weight">Your Weight</string>
     <string name="your_name">Your Name</string>
@@ -66,7 +65,6 @@
     <string name="no_music_app">No music app found on the device</string>
     <string name="target">target</string>
     <string name="progress_binding_format">%d %%</string>
-    <string name="your_target">Your target</string>
     <string name="choose_target">Choose target</string>
     <string name="zero">0</string>
     <string name="target_reached">You reached the target!</string>
