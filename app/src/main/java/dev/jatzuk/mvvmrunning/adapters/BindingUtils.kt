@@ -56,7 +56,7 @@ fun MaterialTextView.setCaloriesBurned(run: Run) {
 
 @BindingAdapter("toggleRunText")
 fun setStartButtonText(button: MaterialButton, isTracking: Boolean) {
-    // workaround to avoid updates from viewmodel (millis value) in binding
+    // workaround to avoid updates from viewModel (millis value) in binding
     val millis = TrackingRepository.timeRunInMillis.value!!
     button.text =
         if (millis == 0L && !isTracking) button.context.getString(R.string.start)

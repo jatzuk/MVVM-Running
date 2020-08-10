@@ -1,5 +1,6 @@
 package dev.jatzuk.mvvmrunning.other
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import com.github.mikephil.charting.components.MarkerView
@@ -9,6 +10,7 @@ import com.github.mikephil.charting.utils.MPPointF
 import dev.jatzuk.mvvmrunning.databinding.MarkerViewBinding
 import dev.jatzuk.mvvmrunning.db.Run
 
+@SuppressLint("ViewConstructor")
 class CustomMarkerView(
     private val runs: List<Run>,
     context: Context,
