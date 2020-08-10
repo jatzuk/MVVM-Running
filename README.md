@@ -17,18 +17,18 @@
 - Timber
 - Motion Layout
 
-![Main](.github/screenshots/Screenshot_main_screen.png)
+<img src=".github/screenshots/starting_animation.gif" width="250"/>
 
-![Notification](.github/screenshots/Screenshot_notification.png)
+<img src=".github/screenshots/Screenshot_main_screen.png" width="250"/>
 
-![Running](.github/screenshots/Screenshot_running.png)
+<img src=".github/screenshots/Screenshot_notification.png" width="250"/>
 
-![Setup run](.github/screenshots/Screenshot_setup_run.png)
+<img src=".github/screenshots/Screenshot_running.png" width="250"/>
 
-![Statistics](.github/screenshots/Screenshot_statistics.png)
+<img src=".github/screenshots/Screenshot_setup_run.png" width="250"/>
 
-![anim](.github/screenshots/starting_animation.gif)
+<img src=".github/screenshots/Screenshot_statistics.png" width="250"/>
 
 ## Thanks
 
-[Original idea and base app:](https://github.com/androiddevs18/RunningApp)
+[Original idea and base app](https://github.com/androiddevs18/RunningApp)
