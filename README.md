@@ -17,17 +17,19 @@
 - [Timber](https://github.com/JakeWharton/timber)
 - [Motion Layout](https://developer.android.com/training/constraint-layout/motionlayout)
 
-<img src=".github/screenshots/starting_animation.gif" width="250"/>
-
-<img src=".github/screenshots/Screenshot_main_screen.png" width="250"/>
-
-<img src=".github/screenshots/Screenshot_notification.png" width="250"/>
-
-<img src=".github/screenshots/Screenshot_running.png" width="250"/>
-
-<img src=".github/screenshots/Screenshot_setup_run.png" width="250"/>
-
-<img src=".github/screenshots/Screenshot_statistics.png" width="250"/>
+<img src=".github/screenshots/starting_animation.gif" 
+  alt="GIF starting animation" width="200"/>
+<img src=".github/screenshots/Screenshot_main_screen.png"
+  alt="Screenshot Main Screen" width="200"/>
+<img src=".github/screenshots/Screenshot_notification.png"
+  alt="Screenshot Notification" width="200"/>
+  
+<img src=".github/screenshots/Screenshot_running.png"
+  alt="Screenshot Running" width="200"/>
+<img src=".github/screenshots/Screenshot_setup_run.png"
+  alt="Screenshot Setup Run" width="200"/>
+<img src=".github/screenshots/Screenshot_statistics.png"
+  alt="Screenshot Statistics" width="200"/>
 
 ## Thanks
 
